@@ -1,0 +1,16 @@
+---
+title: "Workflow"
+author: "Aleksandar Spasojevic"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::pdf_document:
+    includes:
+      in_header: header.tex
+vignette: >
+  %\VignetteIndexEntry{Template}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+### Notes by Dr. N. Klein
+\includepdf[pages=-]{template.pdf}
