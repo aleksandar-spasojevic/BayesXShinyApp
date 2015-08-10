@@ -15,6 +15,10 @@ bayesX <- function(prg_path, ...){
   # create new data environment, where data is stored
   data_env <- new.env()
   assign("Data", data_(bayesXResult), envir = data_env)
+  # NOTE: I assume only numeric predictors since I am using 'range'
+  eval(parse(text = "Ranges <- lapply(Data, function(var) {r <- range(var);c(floor(r[1]), ceiling(r[2]))})"), envir = data_env)
+  eval(parse(text = "Sequences <- lapply(Data, function(var) seq(floor(var[1]), ceiling(var[2]), length.out = 101))"), 
+       envir = data_env)
   attr(bayesXResult, "data_env") <- data_env
   return(bayesXResult)
 }
@@ -90,10 +94,10 @@ bayesXOutput.bayesXResult <- function(bayesXResult, ...){
   r_file <- readLines(list.files(output_path(bayesXResult), "*.r$",
                                  full.names = TRUE))
   # extract information out of .r file in output per line
-  output_meta <- lapply(r_file, function(char){
+  output_meta <- lapply(r_file, function(line){
     # if line contains the key 'term' then we declare it as an effect
-    is_effect <- grepl("term", char)
-    key_values <- unlist(strsplit(char, ","))
+    is_effect <- grepl("term", line)
+    key_values <- unlist(strsplit(line, ","))
     meta <- list()
     for (pair in key_values) {
       splitted <- unlist(strsplit(pair, "="))
@@ -102,12 +106,13 @@ bayesXOutput.bayesXResult <- function(bayesXResult, ...){
     }
     if ( is_effect ){
       class(meta) <- c("effect", class(meta))
-      # assign data to each object, since prediction on effect needs data
+      # assign data env. to each object, since prediction on effect needs data
       attr(meta, "data_env") <- attr(bayesXResult, "data_env")
     }
     return(meta)
   })
   class(output_meta) <- c("bayesXOutput", class(output_meta))
+  attr(output_meta, "data_env") <- attr(bayesXResult, "data_env")
   return(output_meta)
 }
 
@@ -155,35 +160,64 @@ variables.effect <- function(effect, ...){
   return( strsplit(variables_clean, " ")[[1]] )
 }
 
+#' @export
+variables.bayesXOutput <- function(bayesXOutput, ...){
+  variables <- lapply(bayesXOutput, function(elem){
+    tryCatch(variables(elem), 
+             warning = function(w) NULL, 
+             error = function(e) NULL)
+  }, ...)
+  return( unique(unlist(variables)) )
+}
+
+
+#' @export
+data_.effect <- function(effect, ...){
+  return( get("Data", envir = attr(effect,"data_env"))[variables(effect)] )
+}
+
+
+#' @export
+ranges <- function(effect, ...) UseMethod("ranges")
+
+#' @export
+ranges.effect <- function(effect, ...){
+  return( get("Ranges", envir = attr(effect,"data_env"))[variables(effect)] )
+}
+
+#' @export
+ranges.bayesXOutput <- function(bayesXOutput, ...){
+  return( get("Ranges", envir = attr(bayesXOutput,"data_env"))[variables(bayesXOutput)] )
+}
+
+
+#' @export
+sequences <- function(effect, ...) UseMethod("sequences")
+
+#' @export
+sequences.effect <- function(effect, ...){
+  return( get("Sequences", envir = attr(effect,"data_env"))[variables(effect)] )
+}
+
+#' @export
+sequences.bayesXOutput <- function(bayesXOutput, ...){
+  return( get("Sequences", envir = attr(bayesXOutput,"data_env"))[variables(bayesXOutput)] )
+}
+
 
 #' predict an effect
 #' 
 #' @export
 predict.effect <- function(effect, X, ...){
-  variables <- variables(effect)
-  if ( missing(X) ) {
-    # take data, calculate the range of variables and make sequence. After 
-    # that, predict on this sequence
-    Data <- get("Data", envir = attr(effect,"data_env"))
-    ranges <- lapply(variables, function(var) range(Data[[var]], na.rm = TRUE))
-    Xlist <- structure(
-      lapply(ranges, function(r, ...) {
-        seq(r[1], r[2], ...)
-      }, length.out = 50), names = variables)
-    # predict effect on a grid of covariates
-    Xgrid <- X <- expand.grid(Xlist)
-  } else {
-    # extract variables needed
-    Xgrid <- subset(X, select = names(X) %in% variables)
-  }
-  
+  len <- length(X[[1]])
+  X <- X[variables(effect)] # if 'X' a list not slow
   if ( linear(effect) ) {
-    if ( has_constant(effect) )
-      Xgrid <- append(Xgrid, list(rep.int(1, length(X[[1]]))), after = 0)
-    design_matrix <- do.call(cbind, Xgrid)
+    if ( has_constant(effect) ) # append '1' would work, but dimension in parameters not of same dimension ('sweep' a possible solution)
+      X <- append(X, list(const = rep.int(1, len)), after = 0)
+    design_matrix <- do.call(cbind, X)
   } else { # smooth effect (function)
     basis <- source(effect[["pathbasis"]], local = TRUE)$value
-    design_matrix <- basis(Xgrid)
+    design_matrix <- basis(X)
   }
   
   params <- t(read.table(effect[["pathsamples"]], header = TRUE)[,-1])
@@ -200,12 +234,17 @@ predict.effect <- function(effect, X, ...){
 parameters <- function(bayesXOutput, ...) UseMethod("parameters")
 
 #' @export
-parameters.bayesXOutput <- function(bayesXOutput, ...){
+parameters.bayesXOutput <- function(bayesXOutput, 
+                                    # if 'X' not given by user, we take data sequence,
+                                    # make out of it a grid and then predict on this grid
+                                    X = expand.grid(sequences(bayesXOutput)[variables(bayesXOutput)]),
+                                    ...){
   # tryCatch since some elements of bayesXOutput are not of type 'effect'. If
   # one 'elem' is not of type 'effect' we will return 'NULL' otherwise 
-  # 'predict.effect' function is called 
+  # 'predict.effect' function is called
+  force(X)
   parameters <- lapply(bayesXOutput, function(elem, ...){
-    tryCatch(predict(elem, ...), 
+    tryCatch(predict(elem, X = X, ...), 
              warning = function(w) NULL, 
              error = function(e) NULL)
   }, ...)
@@ -217,10 +256,10 @@ parameters.bayesXOutput <- function(bayesXOutput, ...){
                    class(eta) <- c("parameter", class(eta))
                    return(eta)
                  })
-
+  
   return(structure(etas, 
                    class = c("parameters", class(etas)),
-                   X = structure(as.list(...), out.attrs = NULL)))
+                   X = structure(as.list(X), out.attrs = NULL)))
 }
 
 
@@ -266,26 +305,30 @@ mean.parameter <- function(parameter, ...){
 
 
 #' @export
+var <- function(parameters, ...) UseMethod("var")
+
+#' @export
 var.parameters <- function(parameters, ...){
   lapply(parameters, var, ...)
 }
 
-
 #' @export
 var.parameter <- function(parameter, ...){
-  apply(parameter, 1, var, ...)
+  apply(parameter, 1, stats::var, ...)
 }
 
+
+#' @export
+sd <- function(parameters, ...) UseMethod("sd")
 
 #' @export
 sd.parameters <- function(parameters, ...){
   lapply(parameters, sd, ...)
 }
 
-
 #' @export
 sd.parameter <- function(parameter, ...){
-  apply(parameter, 1, sd, ...)
+  apply(parameter, 1, stats::sd, ...)
 }
 
 
@@ -303,6 +346,8 @@ data_.bayesXResult <- function(bayesXResult, header = TRUE, ...){
   # extract data path
   key <- "infile using "
   key_match <- grep(key, program, value = TRUE)[1]
+  # TODO: filepath can contain 'whitespaces', this is not covered in this pattern
+  # and will fail if such path occurs
   data_path <- gsub("^(.*)\\s(.*)(/[^/]+$)", "\\2\\3", key_match)
   if ( !file.exists(data_path) )
     stop("supplied 'usefile [path]' either does not exist or parser failed")

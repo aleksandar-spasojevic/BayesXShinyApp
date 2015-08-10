@@ -9,6 +9,6 @@
 #' @importFrom shiny runApp
 #' @export
 run_app <- function(display.mode = "normal", ...){
-  app_path <- system.file("shiny-app", package = "ShinyApp")
+  app_path <- system.file("shiny-app", package = "BayesXShinyApp")
   runApp(app_path, display.mode = display.mode, ...)
 }
