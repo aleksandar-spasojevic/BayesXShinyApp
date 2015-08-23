@@ -265,6 +265,13 @@ parameters.bayesXOutput <- function(bayesXOutput,
 
 #' @export
 "[.parameters" <- function(parameters, ...){
+  # one can use 'all.equal' to extract rows. Row's represent the underlying
+  # grid of covariates. Since covariates can be of arbitrary form (double precision)
+  # one cannot compare numbers with '==' operator, this may result in error. 
+  # So in this case one prefers 'all.equal' for 'near equality'. Using 
+  # 'all.equal' will either result in a logical 'TRUE' or character value, 
+  # therefore we have to check if it's a character, if so, we extract indexes 
+  # where 'TRUE' stays and use those for indexing
   match <- with(attr(parameters, "X"), ...)
   # subset by row
   sel_params <- lapply(parameters, "[", match, , drop = FALSE)
