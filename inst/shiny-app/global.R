@@ -13,6 +13,9 @@ fit <- bayesX('{{prg_path}}')
 output <- bayesXOutput(fit)
 params <- parameters(output)
 
+# Data visible to RExpression in App
+Data <- do.call(append, list(params, attr(params, 'X')))
+
 {{Rcode}}
 
 "

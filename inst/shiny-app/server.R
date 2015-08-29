@@ -88,8 +88,12 @@ shinyServer(function(input, output, session) {
     if ( is.null(input$Parameter) | length(current$param_sample) == 0 )
       return( NULL )
     
+    xlim <- c(input$xmin, input$xmax)
     hist(current$param_sample, main = "", xlab = input$Parameter,
-         xlim = c(isolate(input$xmin), isolate(input$xmax)))
+         # if xlim not given, use default
+         xlim = unlist(ifelse(any(is.na(xlim)), 
+                              list(range(current$param_sample)), 
+                              list(xlim))))
   })
   
   output$Parameter_Summary <- renderText({
@@ -108,8 +112,7 @@ shinyServer(function(input, output, session) {
       # save command to commands$Rcode. If below there is an error, we will delete
       # the command
       tmpl <- "with(%s, %s)"
-      data <- "do.call(append, list(params, attr(params, 'X')))"
-      rcode <- sprintf(tmpl, data, input$RExpression)
+      rcode <- sprintf(tmpl, "Data", input$RExpression)
       commands$Rcode[[input$Model]] <- append(commands$Rcode[[input$Model]], 
                                               list(rcode))
     })
