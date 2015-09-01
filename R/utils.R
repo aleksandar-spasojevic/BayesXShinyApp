@@ -7,9 +7,10 @@
 #' @export
 bayesX <- function(prg_path, ...){
   if ( !file.exists(prg_path) ) stop("program path not correct")
-  bayesXResult <- structure(read.csv(pipe(paste(bayesX_path, prg_path)),
-                                     stringsAsFactors = FALSE),
-                            class = "character")[[1]]
+#   bayesXResult <- structure(read.csv(pipe(paste(bayesX_path, prg_path)),
+#                                      stringsAsFactors = FALSE),
+#                             class = "character")[[1]]
+  bayesXResult <- suppressWarnings(BayesXsrc::run.bayesx(prg_path, verbose = FALSE)$log)
   class(bayesXResult) <- c("bayesXResult", class(bayesXResult))
   attr(bayesXResult, "prg") <- readLines(prg_path)
   # create new data environment, where data is stored
@@ -156,8 +157,9 @@ variables.effect <- function(effect, ...){
   # remove 'const' if present
   variables <- gsub("const", "", effect[["term"]])
   # remove leading|trailing whitespaces and possible smooth 'sx(...)' key
-  variables_clean <- gsub("^\\s+|sx\\(|\\)|\\s+$", "", variables)
-  return( strsplit(variables_clean, " ")[[1]] )
+  # also clean ',' if multiple covariates in smooth
+  variables_clean <- unlist(strsplit(gsub("^\\s+|s\\(|sx\\(|\\)|\\s+$", "", variables), ","))
+  return( unlist(strsplit(variables_clean, " ")) )
 }
 
 #' @export
@@ -236,7 +238,7 @@ parameters <- function(bayesXOutput, ...) UseMethod("parameters")
 #' @export
 parameters.bayesXOutput <- function(bayesXOutput, 
                                     # if 'X' not given by user, we take data sequence,
-                                    # make out of it a grid and then predict on this grid
+                                    # make a grid out of it and then predict on this grid
                                     X = expand.grid(sequences(bayesXOutput)[variables(bayesXOutput)]),
                                     ...){
   # tryCatch since some elements of bayesXOutput are not of type 'effect'. If
@@ -271,7 +273,7 @@ parameters.bayesXOutput <- function(bayesXOutput,
   # So in this case one prefers 'all.equal' for 'near equality'. Using 
   # 'all.equal' will either result in a logical 'TRUE' or character value, 
   # therefore we have to check if it's a character, if so, we extract indexes 
-  # where 'TRUE' stays and use those for indexing
+  # where 'TRUE' stays and use those for indexing. Drawback of this is slowness!
   match <- with(attr(parameters, "X"), ...)
   # subset by row
   sel_params <- lapply(parameters, "[", match, , drop = FALSE)
@@ -295,7 +297,7 @@ quantile.parameters <- function(parameters, ...){
 #' @export
 quantile.parameter <- function(parameter, ...){
   # over 'columns'
-  apply(parameter, 1, quantile, ...)
+  apply(parameter, FUN = quantile, ...)
 }
 
 
@@ -307,7 +309,7 @@ mean.parameters <- function(parameters, ...){
 
 #' @export
 mean.parameter <- function(parameter, ...){
-  apply(parameter, 1, mean, ...)
+  apply(parameter, FUN = mean, ...)
 }
 
 
@@ -321,7 +323,7 @@ var.parameters <- function(parameters, ...){
 
 #' @export
 var.parameter <- function(parameter, ...){
-  apply(parameter, 1, stats::var, ...)
+  apply(parameter, FUN = stats::var, ...)
 }
 
 
@@ -335,7 +337,7 @@ sd.parameters <- function(parameters, ...){
 
 #' @export
 sd.parameter <- function(parameter, ...){
-  apply(parameter, 1, stats::sd, ...)
+  apply(parameter, FUN = stats::sd, ...)
 }
 
 
