@@ -94,9 +94,9 @@ bayesXOutput <- function(bayesXResult, ...) UseMethod("bayesXOutput")
 bayesXOutput.bayesXResult <- function(bayesXResult, ...){
   r_file <- readLines(list.files(output_path(bayesXResult), "*.r$",
                                  full.names = TRUE))
-  # extract information out of .r file in output per line
+  # extract information of .r file in output per line
   output_meta <- lapply(r_file, function(line){
-    # if line contains the key 'term' then we declare it as an effect
+    # if line contains 'term' we declare it as an effect
     is_effect <- grepl("term", line)
     key_values <- unlist(strsplit(line, ","))
     meta <- list()
@@ -146,6 +146,15 @@ has_constant <- function(effect, ...) UseMethod("has_constant")
 #' @export
 has_constant.effect <- function(effect, ...){
   return( grepl("const", effect[["term"]]) )
+}
+
+
+#' @export
+nonlinear <- function(effect, ...) UseMethod("nonlinear")
+
+#' @export
+nonlinear.effect <- function(effect, ...){
+  return( grepl("^nonlinear", effect[["filetype"]]) )
 }
 
 
@@ -213,13 +222,18 @@ sequences.bayesXOutput <- function(bayesXOutput, ...){
 predict.effect <- function(effect, X, ...){
   len <- length(X[[1]])
   X <- X[variables(effect)] # if 'X' a list not slow
+  
   if ( linear(effect) ) {
     if ( has_constant(effect) ) # append '1' would work, but dimension in parameters not of same dimension ('sweep' a possible solution)
       X <- append(X, list(const = rep.int(1, len)), after = 0)
     design_matrix <- do.call(cbind, X)
-  } else { # smooth effect (function)
+    
+  } else if ( nonlinear(effect) ) {
     basis <- source(effect[["pathbasis"]], local = TRUE)$value
     design_matrix <- basis(X)
+    
+  } else {
+    stop( sprintf("%s: type of effect not supported", effect[["filetype"]]) )
   }
   
   params <- t(read.table(effect[["pathsamples"]], header = TRUE)[,-1])
@@ -237,8 +251,8 @@ parameters <- function(bayesXOutput, ...) UseMethod("parameters")
 
 #' @export
 parameters.bayesXOutput <- function(bayesXOutput, 
-                                    # if 'X' not given by user, we take data sequence,
-                                    # make a grid out of it and then predict on this grid
+                                    # if 'X' not given, we take data sequence,
+                                    # make grid and predict on this grid
                                     X = expand.grid(sequences(bayesXOutput)[variables(bayesXOutput)]),
                                     ...){
   # tryCatch since some elements of bayesXOutput are not of type 'effect'. If
@@ -247,9 +261,12 @@ parameters.bayesXOutput <- function(bayesXOutput,
   force(X)
   parameters <- lapply(bayesXOutput, function(elem, ...){
     tryCatch(predict(elem, X = X, ...), 
-             warning = function(w) NULL, 
+             warning = function(w) NULL,
              error = function(e) NULL)
   }, ...)
+  
+  if ( all(sapply(parameters, is.null)) )
+    stop("types of effects not supported")
   
   etas <- tapply(unlist(parameters, recursive = FALSE, use.names = TRUE), 
                  INDEX = list(unlist(bayesXOutput["equationtype"])), 
