@@ -219,13 +219,12 @@ sequences.bayesXOutput <- function(bayesXOutput, ...){
 #' 
 #' @export
 predict.effect <- function(effect, X, ...){
+  len <- length(X[[1]])
   X <- X[variables(effect)] # if 'X' a list not slow
   
   if ( linear(effect) ) {
-    if ( has_constant(effect) ){
-      len <- length(X[[1]])
+    if ( has_constant(effect) )
       X <- append(X, list(const = rep.int(1, len)), after = 0) # append '1' would work, but dimension in parameters not of same dimension ('sweep' a possible solution)
-    } 
     design_matrix <- do.call(cbind, X)
     
   } else if ( nonlinear(effect) ) {
@@ -259,19 +258,19 @@ parameters.bayesXOutput <- function(bayesXOutput,
   # one 'elem' is not of type 'effect' we will return 'NULL' otherwise 
   # 'predict.effect' function is called
   force(X)
-  parameters <- lapply(bayesXOutput, function(elem, ...){
+  parameters <- unlist(lapply(bayesXOutput, function(elem, ...){
     tryCatch(predict(elem, X = X, ...), 
              warning = function(w) NULL,
              error = function(e) NULL)
-  }, ...)
+  }, ...), recursive = FALSE, use.names = TRUE)
   
   if ( all(sapply(parameters, is.null)) ){
     stop(sprintf("types of effects not supported: %s", 
                  paste(bayesXOutput["filetype"], collapse = ",")))
   }
   
-  etas <- tapply(unlist(parameters, recursive = FALSE, use.names = TRUE), 
-                 INDEX = list(unlist(bayesXOutput["equationtype"])), 
+  etas <- tapply(parameters, 
+                 INDEX = names(parameters), 
                  FUN = function(...) {
                    eta <- do.call("+", ...)
                    class(eta) <- c("parameter", class(eta))
