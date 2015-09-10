@@ -6,7 +6,7 @@
 #'
 #' @export
 bayesX <- function(prg_path, ...){
-  if ( !file.exists(prg_path) ) stop("program path not correct")
+  if ( !file.exists(prg_path) ) stop("program path not present")
 #   bayesXResult <- structure(read.csv(pipe(paste(bayesX_path, prg_path)),
 #                                      stringsAsFactors = FALSE),
 #                             class = "character")[[1]]
@@ -75,8 +75,7 @@ output_path.bayesXResult <- function(bayesXResult, ...){
   if( dir.exists(dir_path) )
     return(dir_path)
   else
-    stop(paste("output directory specified by 'outfile [path]' either wrong or parser
-         failed. What parser found looks like this:", dir_path))
+    stop(paste("output path can not be parsed:", path))
 }
 
 
@@ -220,12 +219,13 @@ sequences.bayesXOutput <- function(bayesXOutput, ...){
 #' 
 #' @export
 predict.effect <- function(effect, X, ...){
-  len <- length(X[[1]])
   X <- X[variables(effect)] # if 'X' a list not slow
   
   if ( linear(effect) ) {
-    if ( has_constant(effect) ) # append '1' would work, but dimension in parameters not of same dimension ('sweep' a possible solution)
-      X <- append(X, list(const = rep.int(1, len)), after = 0)
+    if ( has_constant(effect) ){
+      len <- length(X[[1]])
+      X <- append(X, list(const = rep.int(1, len)), after = 0) # append '1' would work, but dimension in parameters not of same dimension ('sweep' a possible solution)
+    } 
     design_matrix <- do.call(cbind, X)
     
   } else if ( nonlinear(effect) ) {
@@ -265,8 +265,10 @@ parameters.bayesXOutput <- function(bayesXOutput,
              error = function(e) NULL)
   }, ...)
   
-  if ( all(sapply(parameters, is.null)) )
-    stop("types of effects not supported")
+  if ( all(sapply(parameters, is.null)) ){
+    stop(sprintf("types of effects not supported: %s", 
+                 paste(bayesXOutput["filetype"], collapse = ",")))
+  }
   
   etas <- tapply(unlist(parameters, recursive = FALSE, use.names = TRUE), 
                  INDEX = list(unlist(bayesXOutput["equationtype"])), 
@@ -375,7 +377,7 @@ data_.bayesXResult <- function(bayesXResult, header = TRUE, ...){
   # and will fail if such path occurs
   data_path <- gsub("^(.*)\\s(.*)(/[^/]+$)", "\\2\\3", key_match)
   if ( !file.exists(data_path) )
-    stop("supplied 'usefile [path]' either does not exist or parser failed")
+    stop(sprintf("%s: can not be parsed", key_match))
   
   return(utils::read.table(data_path, header = header, ...))
 }
