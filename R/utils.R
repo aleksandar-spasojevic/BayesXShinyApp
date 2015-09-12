@@ -95,8 +95,6 @@ bayesXOutput.bayesXResult <- function(bayesXResult, ...){
                                  full.names = TRUE))
   # extract information of .r file in output per line
   output_meta <- lapply(r_file, function(line){
-    # if line contains 'term' we declare it as an effect
-    is_effect <- grepl("term", line)
     key_values <- unlist(strsplit(line, ","))
     meta <- list()
     for (pair in key_values) {
@@ -104,6 +102,8 @@ bayesXOutput.bayesXResult <- function(bayesXResult, ...){
       key <- splitted[1]; value <- splitted[2]
       meta[key] <- value
     }
+    # if line contains 'term' we declare it as an effect
+    is_effect <- grepl("term", line)
     if ( is_effect ){
       class(meta) <- c("effect", class(meta))
       # assign data env. to each object, since prediction on effect needs data
