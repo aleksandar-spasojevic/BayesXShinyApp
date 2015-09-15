@@ -9,9 +9,14 @@ template <- "
 
 library(BayesXShinyApp)
 
-fit <- bayesX('{{prg_path}}')
-output <- bayesXOutput(fit)
-params <- parameters(output)
+output <- bayesXOutput('{{prg_path}}')
+
+# defautl grid of covariates
+variables <- variables(output)
+X <- expand.grid(sapply(variables, function(var){
+                          seq(0, 1, length.out = 101)
+                        }, simplify = FALSE, USE.NAMES = TRUE))
+params <- parameters(output, X) # calc parameter samples on default grid
 
 # Data visible to RExpression in App
 Data <- do.call(append, list(params, attr(params, 'X')))
