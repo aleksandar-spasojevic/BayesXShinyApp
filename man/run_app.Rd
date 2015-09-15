@@ -4,7 +4,7 @@
 \alias{run_app}
 \title{runs ShinyApp}
 \usage{
-run_app(display.mode = "normal", ...)
+run_app(display.mode = "normal", which = "shiny-app", ...)
 }
 \arguments{
 \item{display.mode}{see \code{\link{runApp}}}
