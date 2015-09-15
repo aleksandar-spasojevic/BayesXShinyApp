@@ -2,7 +2,7 @@
 % Please edit documentation in R/run_app.R
 \name{run_app}
 \alias{run_app}
-\title{runs the ShinyApp}
+\title{runs ShinyApp}
 \usage{
 run_app(display.mode = "normal", ...)
 }
@@ -12,7 +12,7 @@ run_app(display.mode = "normal", ...)
 \item{...}{further arguments passed to \code{\link{runApp}}}
 }
 \description{
-runs the ShinyApp
+runs ShinyApp
 }
 \note{
 arguments send to \code{\link{runApp}}
