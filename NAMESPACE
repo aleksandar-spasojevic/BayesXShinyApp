@@ -3,6 +3,7 @@
 S3method("[",bayesXOutput)
 S3method("[",parameters)
 S3method(bayesXOutput,bayesXResult)
+S3method(bayesXOutput,character)
 S3method(data_,bayesXResult)
 S3method(data_,effect)
 S3method(extract,bayesXResult)
