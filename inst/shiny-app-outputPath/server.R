@@ -123,31 +123,22 @@ shinyServer(function(input, output, session) {
       return( NULL )
     
     # Use isolate() to avoid dependency on input$RExpression
-    isolate({
-      # save command to commands$Rcode. If below there is an error, we will delete
-      # the command
-      tmpl <- "with(%s, %s)"
-      rcode <- sprintf(tmpl, "Data", input$RExpression)
-      commands$Rcode[[input$Model]] <- append(commands$Rcode[[input$Model]], 
-                                              list(rcode))
-    })
-    
-    # Use isolate() to avoid dependency on input$RExpression
     tryCatch({
       isolate({
         eval(parse(text = input$RExpression), 
              do.call(append, list(x = current$model$parameters, 
                                   values = attr(current$model$parameters, "X"))))
+        # save command to commands$Rcode
+        tmpl <- "with(%s, %s)"
+        rcode <- sprintf(tmpl, "Data", input$RExpression)
+        commands$Rcode[[input$Model]] <- append(commands$Rcode[[input$Model]], 
+                                                list(rcode))
       })
     },
     warning = function(w) {
-      # delete command added previously
-      commands$Rcode[[input$Model]] <- head(commands$Rcode[[input$Model]], -1)
       createAlert(session, "Dialog", title = "Warning", content = w$message)
     },
     error = function(e) {
-      # delete command added previously
-      commands$Rcode[[input$Model]] <- head(commands$Rcode[[input$Model]], -1)
       createAlert(session, "Dialog", title = "Error", content = e$message)
     })
     
