@@ -7,13 +7,15 @@
 #' @export
 bayesX <- function(prg_path, ...){
   if ( !file.exists(prg_path) ) stop("program path not present")
-#   bayesXResult <- structure(read.csv(pipe(paste(bayesX_path, prg_path)),
-#                                      stringsAsFactors = FALSE),
-#                             class = "character")[[1]]
+  #   bayesXResult <- structure(read.csv(pipe(paste(bayesX_path, prg_path)),
+  #                                      stringsAsFactors = FALSE),
+  #                             class = "character")[[1]]
   bayesXResult <- suppressWarnings(BayesXsrc::run.bayesx(prg_path, verbose = FALSE)$log)
   class(bayesXResult) <- c("bayesXResult", class(bayesXResult))
   attr(bayesXResult, "prg") <- readLines(prg_path)
   # create new data environment, where data is stored
+  
+  # TODO: if data_ fails, do not store data environment and proceed further
   data_env <- new.env()
   assign("Data", data_(bayesXResult), envir = data_env)
   # NOTE: I assume only numeric predictors since I am using 'range'
@@ -22,6 +24,19 @@ bayesX <- function(prg_path, ...){
        envir = data_env)
   attr(bayesXResult, "data_env") <- data_env
   return(bayesXResult)
+}
+
+
+#' access objects from data environment
+#' @export
+get_ <- function(obj, what, ...) UseMethod("get_")
+
+#' @export
+get_.default <- function(obj, what, ...){
+  envir <- attr(obj, "data_env")
+  if( is.null(envir) )
+    stop("object has no data environment")
+  get(what, envir = envir)
 }
 
 
@@ -122,7 +137,6 @@ bayesXOutput.bayesXResult <- function(bayesXResult, ...){
 }
 
 
-
 #' @note since user only passes the output directory, we do not know where
 #' data sample is stored
 #' 
@@ -204,51 +218,26 @@ variables.bayesXOutput <- function(bayesXOutput, ...){
 
 
 #' @export
-data_.effect <- function(effect, ...){
-  envir <- attr(effect,"data_env")
-  if( is.null(envir) )
-    stop("effect has no data environment")
-  return( get("Data", envir = envir)[variables(effect)] )
+data_.default <- function(obj, ...){
+  return( get_(obj, "Data")[variables(obj)] )
 }
 
 
 #' @export
-ranges <- function(effect, ...) UseMethod("ranges")
+ranges <- function(obj, ...) UseMethod("ranges")
 
 #' @export
-ranges.effect <- function(effect, ...){
-  envir <- attr(effect,"data_env")
-  if( is.null(envir) )
-    stop("effect has no data environment")
-  return( get("Ranges", envir = envir)[variables(effect)] )
-}
-
-#' @export
-ranges.bayesXOutput <- function(bayesXOutput, ...){
-  envir <- attr(bayesXOutput,"data_env")
-  if( is.null(envir) )
-    stop("effect has no data environment")
-  return( get("Ranges", envir = envir)[variables(bayesXOutput)] )
+ranges.default <- function(obj, ...){
+  return( get_(obj, "Ranges")[variables(obj)] )
 }
 
 
 #' @export
-sequences <- function(effect, ...) UseMethod("sequences")
+sequences <- function(obj, ...) UseMethod("sequences")
 
 #' @export
-sequences.effect <- function(effect, ...){
-  envir <- attr(effect,"data_env")
-  if( is.null(envir) )
-    stop("effect has no data environment")
-  return( get("Sequences", envir = envir)[variables(effect)] )
-}
-
-#' @export
-sequences.bayesXOutput <- function(bayesXOutput, ...){
-  envir <- attr(bayesXOutput,"data_env")
-  if( is.null(envir) )
-    stop("effect has no data environment")
-  return( get("Sequences", envir = envir)[variables(bayesXOutput)] )
+sequences.default <- function(obj, ...){
+  return( get_(obj, "Sequences")[variables(obj)] )
 }
 
 
@@ -257,6 +246,7 @@ sequences.bayesXOutput <- function(bayesXOutput, ...){
 #' @export
 predict.effect <- function(effect, X, ...){
   len <- length(X[[1]])
+  # extract only variables which are member of effect
   X <- X[variables(effect)] # if 'X' a list not slow
   
   if ( linear(effect) ) {
@@ -301,11 +291,6 @@ parameters.bayesXOutput <- function(bayesXOutput,
              error = function(e) NULL)
   }, ...), recursive = FALSE, use.names = TRUE)
   
-  if ( all(sapply(parameters, is.null)) ){
-    stop(sprintf("types of effects not supported: %s", 
-                 paste(bayesXOutput["filetype"], collapse = ",")))
-  }
-  
   etas <- tapply(parameters, 
                  INDEX = names(parameters), 
                  FUN = function(...) {
@@ -319,15 +304,17 @@ parameters.bayesXOutput <- function(bayesXOutput,
                    X = structure(as.list(X), out.attrs = NULL)))
 }
 
-
+#' subscript operator for 'parameters' objects
+#' 
+#' @note one can use \code{\link{all.equal}} to extract rows. Row's represent 
+#' the underlying grid of covariates. Covariates cannot be compared with 
+#' \code{==} operator, since they are \code{numeric}. Therefore one prefers 
+#' \code{\link{all.equal}} for 'near equality'. 
 #' @export
 "[.parameters" <- function(parameters, ...){
-  # one can use 'all.equal' to extract rows. Row's represent the underlying
-  # grid of covariates. Covariates cannot be compared with '==' operator, since
-  # they are 'doubles'. Therefore one prefers 'all.equal' for 'near equality'. 
-  # Using 'all.equal' will either result in a character 'TRUE' or message, 
-  # therefore we have to check if it's a character, if so, we extract indexes 
-  # where 'TRUE' stays and use those for indexing. Drawback of this is slowness!
+  #' Using 'all.equal' will either result in a character 'TRUE' or message, 
+  #' therefore we have to check if it's a character, if so, we extract indexes 
+  #' where 'TRUE' stays and use those for indexing. Drawback of this is slowness!
   match <- with(attr(parameters, "X"), ...)
   # subset by row
   sel_params <- lapply(parameters, "[", match, , drop = FALSE)
