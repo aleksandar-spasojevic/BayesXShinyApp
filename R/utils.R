@@ -106,11 +106,9 @@ get_key_values <- function(line, data_env, ...){
   }
   # if line contains 'term' we declare it as an effect
   is_effect <- grepl("term", line)
-  if ( is_effect ){
+  if ( is_effect )
     class(meta) <- c("effect", class(meta))
-    # assign data env. to each object, since prediction on effect needs maybe data
-    attr(meta, "data_env") <- data_env
-  }
+
   return(meta)
 }
 
@@ -285,14 +283,14 @@ parameters.bayesXOutput <- function(bayesXOutput,
   # one 'elem' is not of type 'effect' we will return 'NULL' otherwise 
   # 'predict.effect' function is called
   force(X)
-  parameters <- unlist(lapply(bayesXOutput, function(elem, ...){
+  effects <- unlist(lapply(bayesXOutput, function(elem, ...){
     tryCatch(predict(elem, X = X, ...), 
              warning = function(w) NULL,
              error = function(e) NULL)
   }, ...), recursive = FALSE, use.names = TRUE)
   
-  etas <- tapply(parameters, 
-                 INDEX = names(parameters), 
+  etas <- tapply(effects, 
+                 INDEX = names(effects), 
                  FUN = function(...) {
                    eta <- do.call("+", ...)
                    class(eta) <- c("parameter", class(eta))
