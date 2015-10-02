@@ -7,14 +7,11 @@
 #' @export
 bayesX <- function(prg_path, ...){
   if ( !file.exists(prg_path) ) stop("program path not present")
-  #   bayesXResult <- structure(read.csv(pipe(paste(bayesX_path, prg_path)),
-  #                                      stringsAsFactors = FALSE),
-  #                             class = "character")[[1]]
   bayesXResult <- suppressWarnings(BayesXsrc::run.bayesx(prg_path, verbose = FALSE)$log)
   class(bayesXResult) <- c("bayesXResult", class(bayesXResult))
   attr(bayesXResult, "prg") <- readLines(prg_path)
-  # create new data environment, where data is stored
   
+  # create new data environment, where data is stored
   # TODO: if data_ fails, do not store data environment and proceed further
   data_env <- new.env()
   assign("Data", data_(bayesXResult), envir = data_env)
@@ -199,7 +196,7 @@ variables.effect <- function(effect, ...){
   # remove 'const' if present
   variables <- gsub("const", "", effect[["term"]])
   # remove leading|trailing whitespaces and possible smooth 'sx(...)' key
-  # also clean ',' if multiple covariates in smooth
+  # also clean ',' if multiple covariates in smooth function
   variables_clean <- unlist(strsplit(gsub("^\\s+|s\\(|sx\\(|\\)|\\s+$", "", variables), ","))
   return( unlist(strsplit(variables_clean, " ")) )
 }
@@ -275,7 +272,7 @@ parameters <- function(bayesXOutput, ...) UseMethod("parameters")
 
 #' @export
 parameters.bayesXOutput <- function(bayesXOutput, 
-                                    # if 'X' not given, we take data sequence,
+                                    # if 'X' not given, we take sequence of each variable in data,
                                     # make grid and predict on this grid
                                     X = expand.grid(sequences(bayesXOutput)[variables(bayesXOutput)]),
                                     ...){
@@ -283,14 +280,14 @@ parameters.bayesXOutput <- function(bayesXOutput,
   # one 'elem' is not of type 'effect' we will return 'NULL' otherwise 
   # 'predict.effect' function is called
   force(X)
-  effects <- unlist(lapply(bayesXOutput, function(elem, ...){
+  effects_predicted <- unlist(lapply(bayesXOutput, function(elem, ...){
     tryCatch(predict(elem, X = X, ...), 
              warning = function(w) NULL,
              error = function(e) NULL)
   }, ...), recursive = FALSE, use.names = TRUE)
   
-  etas <- tapply(effects, 
-                 INDEX = names(effects), 
+  etas <- tapply(effects_predicted, 
+                 INDEX = names(effects_predicted), 
                  FUN = function(...) {
                    eta <- do.call("+", ...)
                    class(eta) <- c("parameter", class(eta))
@@ -307,12 +304,12 @@ parameters.bayesXOutput <- function(bayesXOutput,
 #' @note one can use \code{\link{all.equal}} to extract rows. Row's represent 
 #' the underlying grid of covariates. Covariates cannot be compared with 
 #' \code{==} operator, since they are \code{numeric}. Therefore one prefers 
-#' \code{\link{all.equal}} for 'near equality'. 
+#' \code{\link{all.equal}} for 'near equality'. Using \code{\link{all.equal}} 
+#' will either result in a \code{character} \code{TRUE} or message, 
+#' therefore we have to check if it's a \code{character}, if so, we extract indexes 
+#' where \code{TRUE} stays and use those for indexing. Drawback of this is slowness!
 #' @export
 "[.parameters" <- function(parameters, ...){
-  #' Using 'all.equal' will either result in a character 'TRUE' or message, 
-  #' therefore we have to check if it's a character, if so, we extract indexes 
-  #' where 'TRUE' stays and use those for indexing. Drawback of this is slowness!
   match <- with(attr(parameters, "X"), ...)
   # subset by row
   sel_params <- lapply(parameters, "[", match, , drop = FALSE)
