@@ -13,6 +13,9 @@ subscript operator for 'parameters' objects
 one can use \code{\link{all.equal}} to extract rows. Row's represent
 the underlying grid of covariates. Covariates cannot be compared with
 \code{==} operator, since they are \code{numeric}. Therefore one prefers
-\code{\link{all.equal}} for 'near equality'.
+\code{\link{all.equal}} for 'near equality'. Using \code{\link{all.equal}}
+will either result in a \code{character} \code{TRUE} or message,
+therefore we have to check if it's a \code{character}, if so, we extract indexes
+where \code{TRUE} stays and use those for indexing. Drawback of this is slowness!
 }
 
