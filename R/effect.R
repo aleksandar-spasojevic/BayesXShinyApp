@@ -64,3 +64,6 @@ predict.effect <- function(effect, X, ...){
   predicts <- design_matrix %*% params
   return( structure(list(predicts), names = effect[["equationtype"]]) )
 }
+
+
+

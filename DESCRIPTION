@@ -7,9 +7,20 @@ Maintainer: Aleksandar Spasojevic <a.spasojevic@stud.uni-goettingen.de>
 Description: More about what it does (maybe more than one line)
 License: What license is it under?
 LazyData: TRUE
-Depends: R (>= 3.1.2)
-Imports: shiny (>= 0.12), splines, shinyBS (>= 0.61), whisker, BayesXsrc, shinyFiles, shinythemes, VGAM
+Depends:
+    R (>= 3.1.2)
+Imports:
+    shiny (>= 0.12),
+    splines,
+    shinyBS (>= 0.61),
+    whisker,
+    BayesXsrc,
+    shinyFiles,
+    shinythemes,
+    VGAM
 URL: https://github.com/aleksandar-spasojevic/BayesXShinyApp
 BugReports: https://github.com/aleksandar-spasojevic/BayesXShinyApp/issues
-Suggests: knitr
+Suggests:
+    knitr
 VignetteBuilder: knitr
+RoxygenNote: 5.0.0

@@ -1,7 +1,7 @@
 library(shiny)
 library(shinyBS)
 library(shinythemes)
-
+library(shinyFiles)
 
 shinyUI(fluidPage(
   theme = shinytheme("flatly"),
@@ -26,7 +26,8 @@ shinyUI(fluidPage(
   
   sidebarLayout(
     sidebarPanel(
-      fileInput("Upload", "Upload"),
+      shinyDirButton('Folder', 'Select Folder', 'Please select a folder', FALSE),
+      shinyFilesButton('Program', 'Select Program', 'Please select a program', FALSE),
       selectInput("Model", "Model", ""),
       # Only show this panel if model chosen
       uiOutput("Slider"),
@@ -36,13 +37,16 @@ shinyUI(fluidPage(
     mainPanel(
       bsAlert("Dialog"),
       tabsetPanel(
-        tabPanel("Parameter",
-                 selectInput("Parameter", "Parameter", ""),
-                 plotOutput("Parameter"),
+        tabPanel("Density",
+                 bsButton("Matplot", "all Densities"),
+                 plotOutput("Density"),
                  fluidRow(
                    column(3, numericInput("xmin", "xmin", NULL)),
-                   column(3, numericInput("xmax", "xmax", NULL))
-                 )
+                   column(3, numericInput("xmax", "xmax", NULL)),
+                   column(3, numericInput("ymin", "ymin", NULL)),
+                   column(3, numericInput("ymax", "ymax", NULL))
+                 ),
+                 plotOutput("Densities")
         ),
         tabPanel("Custom",
                  textInput("RExpression", "R Expression", "", "100%"),

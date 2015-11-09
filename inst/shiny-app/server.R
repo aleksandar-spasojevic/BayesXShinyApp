@@ -1,11 +1,12 @@
 library(shiny)
 library(shinyBS)
+library(shinyFiles)
 library(BayesXShinyApp)
 
 
 shinyServer(function(input, output, session) {
   app_values <- reactiveValues(models = NULL)
-  current <- reactiveValues(model = NULL, param_sample = NULL)
+  current <- reactiveValues(model = NULL, param_sample = NULL, density = NULL)
   commands <- reactiveValues(Rcode = NULL)
   
   observe({
@@ -25,29 +26,38 @@ shinyServer(function(input, output, session) {
       sliderInput(v, v, ranges[[v]][1], ranges[[v]][2], ranges[[v]][1], 
                   step = ((ranges[[v]][2] - ranges[[v]][1])/100),
                   ticks = FALSE, sep = "", 
-                  animate = animationOptions(interval = 300))
+                  animate = animationOptions(interval = 500))
     })
   })
   
-  observeEvent(input$Upload, {
-    # run bayesX CLI
+  
+  volumes <- c(root = "~")
+  shinyDirChoose(input, 'Folder', roots = volumes, session = session)
+  shinyFileChoose(input, 'Program', roots = volumes, session = session)
+  
+  observeEvent(input$Folder, {
     tryCatch({
       withProgress(message = "BayesX fitting", value = 0, {
-        result <- bayesX(input$Upload$datapath)
-        
-        output <- bayesXOutput(result)
+
+        path <- parseDirPath(volumes, input$Folder)
+        output <- bayesXOutput(path)
         variables <- variables(output)
-        ranges <- ranges(output)
-        parameters <- parameters(output) # calc parameter samples on default grid
-        
+
+        # default ranges (linked to grid of covariates! (see below))
+        ranges <- sapply(variables, function(var) c(0,1), simplify = FALSE, USE.NAMES = TRUE)
+
+        # create default grid of covariates
+        X <- expand.grid(sapply(variables, function(var) seq(0, 1, length.out = 101), simplify = FALSE, USE.NAMES = TRUE))
+        parameters <- parameters(output, X) # calc parameter samples on default grid
+
         # save result to 'models' list
         app_values$models <- append(app_values$models,
-                                    structure(list(list(result = result,
-                                                        output = output,
-                                                        variables = variables,
-                                                        ranges = ranges,
-                                                        parameters = parameters)),
-                                              names = input$Upload$name))
+                                    structure(list(list(
+                                      output = output,
+                                      variables = variables,
+                                      ranges = ranges,
+                                      parameters = parameters)),
+                                      names = path))
       })
     },
     warning = function(w) {
@@ -57,15 +67,43 @@ shinyServer(function(input, output, session) {
       createAlert(session, "Dialog", title = "Error", content = e$message)
     })
   })
-  
+
+  observeEvent(input$Program, {
+    tryCatch({
+      withProgress(message = "BayesX fitting", value = 0, {
+        
+        path <- parseFilePaths(volumes, input$Program)
+        result <- bayesX( as.character(path$datapath) )
+
+        output <- bayesXOutput(result)
+        variables <- variables(output)
+        ranges <- ranges(output)
+        parameters <- parameters(output) # calc parameter samples on default grid
+
+        # save result to 'models' list
+        app_values$models <- append(app_values$models,
+                                    structure(list(list(result = result,
+                                                        output = output,
+                                                        variables = variables,
+                                                        ranges = ranges,
+                                                        parameters = parameters)),
+                                              names = as.character(path$name)))
+      })
+    },
+    warning = function(w) {
+      createAlert(session, "Dialog", title = "Warning", content = w$message)
+    },
+    error = function(e) {
+      createAlert(session, "Dialog", title = "Error", content = e$message)
+    })
+  })
+
   observe({
     updateSelectInput(session, "Parameter",
                       choices = names(current$model$parameters))
   })
   
   observe({
-    if( is.null(input$Parameter) )
-      return( NULL )
     if( is.null(current$model) )
       return( NULL )
     variables <- current$model$variables
@@ -81,19 +119,46 @@ shinyServer(function(input, output, session) {
     # cond_expr[[var]] <- paste("(sapply(", var, ",all.equal,", input[[var]], ") %in% 'TRUE')", sep = "")
     cond <- paste(cond_expr, collapse = " & ")
     subset <- eval(parse(text = sprintf("%s[%s]", obj, cond)))
-    current$param_sample <- subset[[input$Parameter]]
+    
+    params <- lapply(subset, exp)
+    attributes(params) <- attributes(subset)
+    current$param_sample <- params
+    
+    xlim <- list(from = input$xmin, to = input$xmax)
+    if( any(is.na(xlim)) ) {
+      sequence <- list(from = 0.05, to = 1)
+    } else {
+      sequence <- xlim
+    }
+    x <- do.call(seq, append(sequence, list(length.out = 500)))
+    current$density <- BayesXShinyApp:::density.parameters(params, x = x)
   })
   
-  output$Parameter <- renderPlot({
-    if ( is.null(input$Parameter) | length(current$param_sample) == 0 )
+  output$Density <- renderPlot({
+    if( is.null(current$density) )
+      return( NULL )
+    
+    ylim <- c(input$ymin, input$ymax)
+    if( any(is.na(ylim)) )
+      ylim <- NULL
+    
+    BayesXShinyApp:::plot.density(current$density, ylim = ylim)
+  })
+  
+  output$Densities <- renderPlot({
+    # make dependency on Matplot Button
+    input$Matplot
+    dens <- isolate(current$density)
+    if( is.null(dens) )
       return( NULL )
     
     xlim <- c(input$xmin, input$xmax)
-    hist(current$param_sample, main = "", xlab = input$Parameter,
-         # if xlim not given, use default
-         xlim = unlist(ifelse(any(is.na(xlim)), 
-                              list(range(current$param_sample)), 
-                              list(xlim))))
+    if( any(is.na(xlim)) )
+      xlim <- NULL
+    ylim <- c(input$ymin, input$ymax)
+    if( any(is.na(ylim)) )
+      ylim <- NULL
+    BayesXShinyApp:::matplot(dens, ylim = ylim, xlim = xlim)
   })
   
   output$Parameter_Summary <- renderText({
@@ -108,31 +173,22 @@ shinyServer(function(input, output, session) {
       return( NULL )
     
     # Use isolate() to avoid dependency on input$RExpression
-    isolate({
-      # save command to commands$Rcode. If below there is an error, we will delete
-      # the command
-      tmpl <- "with(%s, %s)"
-      rcode <- sprintf(tmpl, "Data", input$RExpression)
-      commands$Rcode[[input$Model]] <- append(commands$Rcode[[input$Model]], 
-                                              list(rcode))
-    })
-    
-    # Use isolate() to avoid dependency on input$RExpression
     tryCatch({
       isolate({
         eval(parse(text = input$RExpression), 
              do.call(append, list(x = current$model$parameters, 
                                   values = attr(current$model$parameters, "X"))))
+        # save command to commands$Rcode
+        tmpl <- "with(%s, %s)"
+        rcode <- sprintf(tmpl, "Data", input$RExpression)
+        commands$Rcode[[input$Model]] <- append(commands$Rcode[[input$Model]], 
+                                                list(rcode))
       })
     },
     warning = function(w) {
-      # delete command added previously
-      commands$Rcode[[input$Model]] <- head(commands$Rcode[[input$Model]], -1)
       createAlert(session, "Dialog", title = "Warning", content = w$message)
     },
     error = function(e) {
-      # delete command added previously
-      commands$Rcode[[input$Model]] <- head(commands$Rcode[[input$Model]], -1)
       createAlert(session, "Dialog", title = "Error", content = e$message)
     })
     
