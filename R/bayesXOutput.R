@@ -109,3 +109,11 @@ distribution.bayesXOutput <- function(bayesXOutput, ...){
   # -> take first element; often all equation types of same distribution!
   .distributions[[bayesXOutput["family"][[1]]]]
 }
+
+
+#' @export
+density.bayesXOutput <- function(bayesXOutput, X, ...){
+  params <- parameters(bayesXOutput, X)
+  return( density(params, ...) )
+}
+

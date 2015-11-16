@@ -17,10 +17,11 @@ Imports:
     BayesXsrc,
     shinyFiles,
     shinythemes,
-    VGAM
+    VGAM,
+    ggplot2
 URL: https://github.com/aleksandar-spasojevic/BayesXShinyApp
 BugReports: https://github.com/aleksandar-spasojevic/BayesXShinyApp/issues
 Suggests:
     knitr
 VignetteBuilder: knitr
-RoxygenNote: 5.0.0
+RoxygenNote: 5.0.1

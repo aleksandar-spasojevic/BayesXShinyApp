@@ -58,7 +58,7 @@ aggregate.effects_predicted <- function(effects_predicted, ...){
   # set again classes and attributes
   for( index in 1:length(sel_params) )
     class(sel_params[[index]]) <- c("parameter", class(sel_params[[index]]))
-  class(sel_params) <- c("parameters", class(sel_params))
+  class(sel_params) <- class(parameters)
   attr(sel_params, "X") <- lapply(attr(parameters, "X"), "[", match, drop = FALSE)
   attr(sel_params, "distribution") <- attr(parameters, "distribution")
   
@@ -81,7 +81,12 @@ quantile.parameter <- function(parameter, ...){
 
 #' @export
 mean.parameters <- function(parameters, ...){
-  lapply(parameters, mean, ...)
+  distr <- distribution(parameters)
+  mean_fun <- mean(distr)
+  
+  structure(do.call(mean_fun, parameters), 
+            X = attr(parameters, "X"), 
+            class = c("moment", "matrix"))
 }
 
 
@@ -96,7 +101,12 @@ var <- function(parameters, ...) UseMethod("var")
 
 #' @export
 var.parameters <- function(parameters, ...){
-  lapply(parameters, var, ...)
+  distr <- distribution(parameters)
+  var_fun <- var(distr)
+  
+  structure(do.call(var_fun, parameters), 
+            X = attr(parameters, "X"), 
+            class = c("moment", "matrix"))
 }
 
 #' @export
@@ -120,9 +130,58 @@ sd.parameter <- function(parameter, ...){
 
 
 #' @export
+median.parameters <- function(parameters, ...){
+  distr <- distribution(parameters)
+  median_fun <- median(distr)
+  
+  structure(do.call(median_fun, parameters), 
+            X = attr(parameters, "X"), 
+            class = c("moment", "matrix"))
+}
+
+
+#' @export
+mode <- function(parameters, ...) UseMethod("mode")
+
+#' @export
+mode.parameters <- function(parameters, ...){
+  distr <- distribution(parameters)
+  mode_fun <- mode(distr)
+  
+  structure(do.call(mode_fun, parameters), 
+            X = attr(parameters, "X"), 
+            class = c("moment", "matrix"))
+}
+
+
+#' @export
 distribution <- function(parameters, ...) UseMethod("distribution")
 distribution.parameters <- function(parameters, ...){
   # NOTE: for each equation type there is an distribution attribute, unnecessary
   # -> take first element; often all equation types of same distribution!
-  .distributions[[attr(parameters, "distribution")[[1]]]]
+  distr <- .distributions[[attr(parameters, "distribution")[[1]]]]
+  
+  if( is.null(distr) )
+    stop( sprintf("distribution not found, add: %s", attr(parameters, "distribution")[[1]]) )
+  
+  class(distr) <- c("distribution", class(distr))
+  return(distr)
+}
+
+
+#' @export
+density.parameters <- function(parameters, ...){
+  
+  distr <- distribution(parameters)
+  dens.fun <- distr$density
+  
+  # rename parameters so they match with fun (density) parameters in R
+  names(parameters) <- distr$parameter[names(parameters)]
+  dens.fun.vec <- Vectorize(dens.fun, names(parameters))
+  samples <- do.call(dens.fun.vec, append(parameters, list(...)))
+  
+  return( structure(samples, 
+                    class = c("density", class(samples)),
+                    x = ...,
+                    X = attr(parameters, "X")) )
 }

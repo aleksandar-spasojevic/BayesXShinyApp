@@ -1,65 +1,104 @@
 
 .distributions <- list(
-  dagum = list(density = VGAM::ddagum,
-               parameter = c("a" = "shape1.a",
-                             "p" = "shape2.p",
-                             "b" = "scale"),
-               link = exp)
+  dagum = structure(list(density = VGAM::ddagum,
+                         parameter = c("a" = "shape1.a",
+                                       "p" = "shape2.p",
+                                       "b" = "scale"),
+                         link = exp,
+                         moment = list(
+                           # only functions here!
+                           # see wikipedia: https://en.wikipedia.org/wiki/Dagum_distribution
+                           
+                           # mean function
+                           mean = function(a, b, p) {
+                             mean <- (-b/a) * gamma(-1/a) * gamma(1/a + p) / gamma(p)
+                             # if a <= 1 then mean not defined!
+                             mean[ a <= 1 ] <- NA
+                             return( mean )
+                           },
+                           
+                           # median function
+                           median = function(a, b, p) b * (-1 + 2^{1/p})^(-1/a),
+                           
+                           # mode function
+                           mode = function(a, b, p) b * ((a*p - 1)/(a + 1))^(1/a),
+                           
+                           # variance function
+                           var = function(a, b, p) {
+                             var <- -((b/a)^2) * ( 2*a * gamma(-2/a)*gamma(2/a+p)/gamma(p) + (gamma(-1/a)*gamma(1/a + p)/gamma(p))^2 )
+                             # if a <= 2 then variance not defined!
+                             var[ a <= 2 ] <- NA
+                             return( var )
+                           }
+                         )
+  ), class = c("distribution", "list"))
 )
 
 class(.distributions) <- c("distributions", class(.distributions))
 
-#' @export
-distribution <- function(name, density, params){
-  
-  # create an instance of 'distribution' object
-  density_not_fun <- !is.function(density)
-  if( density_not_fun )
-    stop("'denisty' has to be a function")
-  
-  params_have_no_names <- is.null(attr(params, "names"))
-  if( params_have_no_names )
-    stop("all elements in 'params' need a name")
-  
-  structure(list(density = density, parameter = params), names = name)
-}
-
-#' @export
-add <- function(obj) UseMethod("add")
-add.distribution <- function(obj){
-  .distributions <<- append(.distributions, obj)
-}
-
+#' #' @export
+#' distribution <- function(name, density, params, link){
+#'   
+#'   # create an instance of 'distribution' object
+#'   not_fun <- !is.function(density) || !is.function(link)
+#'   if( not_fun )
+#'     stop("'denisty' and 'link' have to be of type 'function'")
+#'   
+#'   params_have_no_names <- is.null(attr(params, "names"))
+#'   if( params_have_no_names )
+#'     stop("all elements in 'params' need a name")
+#'   
+#'   structure(list(density = density, parameter = params, link = link), names = name)
+#' }
+#' 
+#' #' @export
+#' add <- function(obj) UseMethod("add")
+#' add.distribution <- function(obj){
+#'   .distributions <<- append(.distributions, obj, after = 0)
+#' }
 
 #' @export
 supported_distributions <- function(){
   names(.distributions)
 }
 
-
-#' @export
-density.bayesXOutput <- function(bayesXOutput, X, ...){
-  params <- parameters(bayesXOutput, X)
-  return( density(params, ...) )
+mean.distribution <- function(distr, ...){
+  fun <- distr$moment$mean
+  
+  if( is.null(fun) )
+    stop("no mean function defined for distribution")
+  else
+    return(fun)
 }
 
-#' @export
-density.parameters <- function(parameters, ...){
+median.distribution <- function(distr, ...){
+  fun <- distr$moment$median
   
-  distr <- distribution(parameters)
-  if( is.null(distr) )
-    stop( sprintf("distribution not found, add: %s", attr(parameters, "distribution")[[1]]) )
-  dens.fun <- distr$density
-  
-  # rename parameters so they match with fun (density) parameters in R
-  names(parameters) <- distr$parameter[names(parameters)]
-  dens.fun.vec <- Vectorize(dens.fun, names(parameters))
-  samples <- do.call(dens.fun.vec, append(parameters, list(...)))
-  return( structure(samples, 
-                    class = c("density", class(samples)),
-                    x = ...,
-                    X = attr(parameters, "X")) )
+  if( is.null(fun) )
+    stop("no median function defined for distribution")
+  else
+    return(fun)
 }
+
+mode.distribution <- function(distr, ...){
+  fun <- distr$moment$mode
+  
+  if( is.null(fun) )
+    stop("no mode function defined for distribution")
+  else
+    return(fun)
+}
+
+var.distribution <- function(distr, ...){
+  fun <- distr$moment$var
+  
+  if( is.null(fun) )
+    stop("no variance function defined for distribution")
+  else
+    return(fun)
+}
+
+
 
 #' @export
 plot.density <- function(density, xlab = "", ...){
@@ -72,10 +111,73 @@ plot.density <- function(density, xlab = "", ...){
   lines(attr(density, "x"), means, col = "blue")
 }
 
+
 #' @export
 matplot <- function(density, xlab = "", ...){
   graphics::matplot(attr(density, "x"), density, 
                     type = "l", col = "grey", lty = 1, xlab = xlab,
                     ...)
+}
+
+
+#' @export
+plot.moment <- function(samples, ...){
+  # NOTE: in samples there can be values where moment per definition is not defined
+  # -> we exclude the resulting NA's and calculate mean only over valid moment values
+  mean <- apply(samples, 1, mean.default, na.rm = TRUE)
+  
+  X <- attr(samples, "X") # covariates values
+  covariates <- names(X)
+  df <- as.data.frame(append(X, list(mean = mean)))
+  
+  switch( length(covariates), # how many covariates in model?
+          { # 1: univariate plotting
+            plot(df, main = deparse(substitute(samples)), type = "l", ...)
+          },
+          { # 2: bivariate plotting
+            require(ggplot2)
+            print( 
+              ggplot(df, do.call(aes_string, as.list(structure(covariates, names = c("x","y"))))) + 
+                geom_tile(aes(fill = mean)) +
+                ggtitle(deparse(substitute(samples)))
+            )
+          },
+          # more than 2 covariates we do not support
+          stop("more than 2 covariates in model -> we do not know how to plot")
+  )
+}
+
+
+#' @export
+"[.moment" <- function(samples, ...){
+  match <- with(attr(samples, "X"), ...)
+  # subset by row
+  class(samples) <- "matrix"
+  sel_samples <- samples[match, , drop = FALSE]
+  
+  # set again classes and attributes
+  class(sel_samples) <- c("moment", class(samples))
+  attr(sel_samples, "X") <- lapply(attr(samples, "X"), "[", match, drop = FALSE)
+  
+  return(sel_samples)
+}
+
+#' @export
+lines.moment <- function(samples, ...){
+  X <- attr(samples, "X") # get covariates
+  len <- lapply(X, function(covariate) length(unique(covariate)))
+  len_greater_one <- len > 1
+  
+  if( sum(len_greater_one) > 1 )
+    stop("subset 'moment' by [...] operator so only one covariate is varying (other must be fixed)")
+  
+  means <- apply(samples, 1, mean)
+  quantiles <- apply(samples, 1, quantile, c(0.05, 0.95))
+  graphics::matplot( X[[ which(len_greater_one) ]], t(rbind(means, quantiles)), 
+                     type = "l", lty = c(1,2,2), col = "black",
+                     xlab = names(X)[len_greater_one],
+                     ylab = "5% - mean - 95%",
+                     main = deparse(substitute(samples)) )
+  
 }
 
