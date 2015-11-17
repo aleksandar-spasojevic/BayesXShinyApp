@@ -36,26 +36,6 @@
 
 class(.distributions) <- c("distributions", class(.distributions))
 
-#' #' @export
-#' distribution <- function(name, density, params, link){
-#'   
-#'   # create an instance of 'distribution' object
-#'   not_fun <- !is.function(density) || !is.function(link)
-#'   if( not_fun )
-#'     stop("'denisty' and 'link' have to be of type 'function'")
-#'   
-#'   params_have_no_names <- is.null(attr(params, "names"))
-#'   if( params_have_no_names )
-#'     stop("all elements in 'params' need a name")
-#'   
-#'   structure(list(density = density, parameter = params, link = link), names = name)
-#' }
-#' 
-#' #' @export
-#' add <- function(obj) UseMethod("add")
-#' add.distribution <- function(obj){
-#'   .distributions <<- append(.distributions, obj, after = 0)
-#' }
 
 #' @export
 supported_distributions <- function(){
@@ -171,8 +151,8 @@ lines.moment <- function(samples, ...){
   if( sum(len_greater_one) > 1 )
     stop("subset 'moment' by [...] operator so only one covariate is varying (other must be fixed)")
   
-  means <- apply(samples, 1, mean)
-  quantiles <- apply(samples, 1, quantile, c(0.05, 0.95))
+  means <- apply(samples, 1, mean, na.rm = TRUE)
+  quantiles <- apply(samples, 1, quantile, probs = c(0.05, 0.95), na.rm = TRUE)
   graphics::matplot( X[[ which(len_greater_one) ]], t(rbind(means, quantiles)), 
                      type = "l", lty = c(1,2,2), col = "black",
                      xlab = names(X)[len_greater_one],

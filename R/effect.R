@@ -45,7 +45,7 @@ variables.effect <- function(effect, ...){
 predict.effect <- function(effect, X, ...){
   len <- length(X[[1]])
   # extract only variables which are member of effect
-  X <- X[variables(effect)] # if 'X' a list not slow
+  X <- X[variables(effect)] # if 'X' a list not slow when X <- X[...]
   
   if ( linear(effect) ) {
     if ( has_constant(effect) )

@@ -14,10 +14,10 @@ parameters.bayesXOutput <- function(bayesXOutput,
                                     X = expand.grid(sequences(bayesXOutput)[variables(bayesXOutput)]),
                                     ...){
   effects_predicted <- predict(bayesXOutput, X = X)
-  etas <- aggregate(effects_predicted, X)
+  etas <- aggregate(effects_predicted)
   params <- lapply(etas, distribution(bayesXOutput)$link)
   
-  # set attributes
+  # set class and attributes
   attributes(params) <- attributes(etas)
   attr(params, "X") <- structure(as.list(X), out.attrs = NULL)
   attr(params, "distribution") <- structure(bayesXOutput["family"], 
