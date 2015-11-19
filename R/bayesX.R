@@ -15,10 +15,9 @@ bayesX <- function(prg_path, ...){
   # TODO: if data_ fails, do not store data environment and proceed further
   data_env <- new.env()
   assign("Data", data_(bayesXResult), envir = data_env)
-  # NOTE: I assume only numeric predictors since I am using 'range'
-  eval(parse(text = "Ranges <- lapply(Data, function(var) {r <- range(var);c(floor(r[1]), ceiling(r[2]))})"), envir = data_env)
-  eval(parse(text = "Sequences <- lapply(Data, function(var) seq(floor(var[1]), ceiling(var[2]), length.out = 101))"), 
-       envir = data_env)
+  
+  eval(parse(text = "Ranges <- BayesXShinyApp:::.get_ranges(Data)"), envir = data_env)
+  eval(parse(text = "Sequences <- BayesXShinyApp:::.range_to_sequence(Ranges)"), envir = data_env)
   attr(bayesXResult, "data_env") <- data_env
   return(bayesXResult)
 }
