@@ -117,7 +117,7 @@ distribution.bayesXOutput <- function(bayesXOutput, ...){
 }
 
 
-#' @export
+#' @export density.bayesXOutput
 density.bayesXOutput <- function(bayesXOutput, X, ...){
   params <- parameters(bayesXOutput, X)
   return( density(params, ...) )
