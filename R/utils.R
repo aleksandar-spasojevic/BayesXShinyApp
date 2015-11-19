@@ -21,3 +21,29 @@ sequences <- function(obj, ...) UseMethod("sequences")
 sequences.default <- function(obj, ...){
   return( get_(obj, "Sequences")[variables(obj)] )
 }
+
+
+.get_ranges <- function(Data){
+  lapply(Data, function(var) {
+    if( is.numeric(var) && !is.integer(var) ){
+      r <- range(var)
+      return( c(floor(r[1]), ceiling(r[2])) )
+    } else {
+      # 'factor' or 'character'
+      return( unique(var) )
+    }
+  })
+}
+
+
+.range_to_sequence <- function(Ranges, length.out = 10) {
+  lapply(Ranges, function(var) {
+    if( is.numeric(var) && !is.integer(var) ){
+      seq(floor(var[1]), ceiling(var[2]), length.out = length.out)
+    } else {
+      # 'factor' or 'character'
+      return( var )
+    }
+  })
+}
+
