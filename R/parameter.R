@@ -15,7 +15,14 @@ parameters.bayesXOutput <- function(bayesXOutput,
                                     ...){
   effects_predicted <- predict(bayesXOutput, X = X)
   etas <- aggregate(effects_predicted)
-  params <- lapply(etas, distribution(bayesXOutput)$link)
+  params <- tryCatch({
+    lapply(etas, distribution(bayesXOutput)$link)
+  }, error = function(e){
+    # use identity function as link
+    warning( sprintf("there is no link function defined for '%s', instead we use identity function", 
+                     bayesXOutput["family"][[1]]) )
+    etas
+  })
   
   # set class and attributes
   attributes(params) <- attributes(etas)
@@ -23,7 +30,7 @@ parameters.bayesXOutput <- function(bayesXOutput,
   attr(params, "distribution") <- structure(bayesXOutput["family"], 
                                             names = bayesXOutput["equationtype"])
   class(params) <- c("parameters", class(params))
-
+  
   return( params )
 }
 
@@ -31,7 +38,7 @@ aggregate.effects_predicted <- function(effects_predicted, ...){
   effects_aggr <- tapply(effects_predicted, 
                          INDEX = names(effects_predicted), 
                          FUN = function(...) {
-                           eff_aggr <- do.call("+", ...)
+                           eff_aggr <- Reduce("+",...)
                            class(eff_aggr) <- c("effects_aggregated", class(eff_aggr))
                            return(eff_aggr)
                          })
@@ -169,7 +176,7 @@ distribution.parameters <- function(parameters, ...){
 }
 
 
-#' @export
+#' @export density.parameters
 density.parameters <- function(parameters, ...){
   
   distr <- distribution(parameters)
@@ -184,4 +191,11 @@ density.parameters <- function(parameters, ...){
                     class = c("density", class(samples)),
                     x = ...,
                     X = attr(parameters, "X")) )
+}
+
+
+#' @export
+print.density <- function(dens, ...){
+  dens <- as.data.frame(dens)
+  print.default( head(cbind(df, attr(dens, "X")), 6) )
 }
