@@ -8,7 +8,7 @@ Description: More about what it does (maybe more than one line)
 License: What license is it under?
 LazyData: TRUE
 Depends:
-    R (>= 3.1.2)
+    R (>= 3.1.2), ggplot2
 Imports:
     shiny (>= 0.12),
     splines,
@@ -18,10 +18,10 @@ Imports:
     shinyFiles,
     shinythemes,
     VGAM,
-    ggplot2
+    mvtnorm
 URL: https://github.com/aleksandar-spasojevic/BayesXShinyApp
 BugReports: https://github.com/aleksandar-spasojevic/BayesXShinyApp/issues
 Suggests:
     knitr
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 5.0.1.9000

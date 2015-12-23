@@ -6,58 +6,84 @@ library(BayesXShinyApp)
 
 shinyServer(function(input, output, session) {
   app_values <- reactiveValues(models = NULL)
-  current <- reactiveValues(model = NULL, param_sample = NULL, density = NULL)
+  selected <- reactiveValues(model = NULL, param_sample = NULL, density = NULL)
   commands <- reactiveValues(Rcode = NULL)
   
   observe({
-    updateSelectInput(session, "Model", choices = names(app_values$models))
+    models <- names(app_values$models)
+    updateSelectInput(session, "Model", choices = models,
+                      selected = tail(models,1))
   })
   
   observeEvent(input$Model, {
-    current$model <- app_values$models[[input$Model]]
+    selected$model <- app_values$models[[input$Model]]
   })
   
-  output$Slider <- renderUI({
-    if ( is.null(current$model) )
+  # update axes ui components
+  output$AxisRanges <- renderUI({
+    if ( is.null(selected$model) )
       return( NULL )
-    ranges <- current$model$ranges
-    variables <- current$model$variables
-    lapply(variables, function(v) { # index slider
-      sliderInput(v, v, ranges[[v]][1], ranges[[v]][2], ranges[[v]][1], 
-                  step = ((ranges[[v]][2] - ranges[[v]][1])/100),
-                  ticks = FALSE, sep = "", 
-                  animate = animationOptions(interval = 500))
+    
+    is_bivariate <- grepl("bivariate",selected$model$dim)
+    
+    if(is_bivariate){
+      dens_axis <- c("y1","y2")
+    } else {
+      dens_axis <- c("y1")
+    }
+    
+    lapply(dens_axis, function(axs){
+      id_min <- paste0("AxisMin",axs)
+      id_max <- paste0("AxisMax",axs)
+      list(numericInput(id_min, label = paste0(axs, " Min"), value = NULL),
+           numericInput(id_max, label = paste0(axs, " Max"), value = NULL))
     })
   })
   
+  output$Slider <- renderUI({
+    if ( is.null(selected$model) )
+      return( NULL )
+    
+    variables <- selected$model$varyingCovariates
+    lapply(variables, function(v) { # index slider
+      numericInput(v, v, NULL)
+    })
+  })
+  
+  output$CovariatesToFix <- renderUI({
+    variablesToFix <- setdiff(Variables, input$CovaritesAsVarying)
+    lapply(variablesToFix, function(v){
+      numericInput(paste0(v,"fixed"), v, NULL)
+    })
+  })
+  
+  observeEvent(selected$model$variables, {
+    updateSelectizeInput(session, 'CovariateVarying', 
+                         choices = selected$model$variables)
+  })
   
   volumes <- c(root = "~")
   shinyDirChoose(input, 'Folder', roots = volumes, session = session)
   shinyFileChoose(input, 'Program', roots = volumes, session = session)
   
+  Path <- NULL
+  Output <- NULL
+  Variables <- NULL
+  Dimension <- NULL
+  
   observeEvent(input$Folder, {
     tryCatch({
       withProgress(message = "BayesX fitting", value = 0, {
-
-        path <- parseDirPath(volumes, input$Folder)
-        output <- bayesXOutput(path)
-        variables <- variables(output)
-
-        # default ranges (linked to grid of covariates! (see below))
-        ranges <- sapply(variables, function(var) c(0,1), simplify = FALSE, USE.NAMES = TRUE)
-
-        # create default grid of covariates
-        X <- expand.grid(sapply(variables, function(var) seq(0, 1, length.out = 101), simplify = FALSE, USE.NAMES = TRUE))
-        parameters <- parameters(output, X) # calc parameter samples on default grid
-
-        # save result to 'models' list
-        app_values$models <- append(app_values$models,
-                                    structure(list(list(
-                                      output = output,
-                                      variables = variables,
-                                      ranges = ranges,
-                                      parameters = parameters)),
-                                      names = path))
+        
+        Path <<- parseDirPath(volumes, input$Folder)
+        Output <<- BayesXShinyApp:::bayesXOutput.character(Path)
+        Dimension <<- BayesXShinyApp:::distribution.bayesXOutput(Output)$class
+        Variables <<- BayesXShinyApp:::variables(Output)
+        
+        updateSelectizeInput(session, "CovaritesAsVarying", choices = Variables)
+        
+        # choose which variables should varying and which should be fixed
+        toggleModal(session, "SpecifyCovariates", "open")
       })
     },
     warning = function(w) {
@@ -67,27 +93,21 @@ shinyServer(function(input, output, session) {
       createAlert(session, "Dialog", title = "Error", content = e$message)
     })
   })
-
+  
   observeEvent(input$Program, {
     tryCatch({
       withProgress(message = "BayesX fitting", value = 0, {
         
-        path <- parseFilePaths(volumes, input$Program)
-        result <- bayesX( as.character(path$datapath) )
-
-        output <- bayesXOutput(result)
-        variables <- variables(output)
-        ranges <- ranges(output)
-        parameters <- parameters(output) # calc parameter samples on default grid
-
-        # save result to 'models' list
-        app_values$models <- append(app_values$models,
-                                    structure(list(list(result = result,
-                                                        output = output,
-                                                        variables = variables,
-                                                        ranges = ranges,
-                                                        parameters = parameters)),
-                                              names = as.character(path$name)))
+        Path <<- parseFilePaths(volumes, input$Program)
+        result <- BayesXShinyApp:::bayesX( as.character(Path$datapath) )
+        Output <<- BayesXShinyApp:::bayesXOutput.bayesXResult(result)
+        Dimension <<- BayesXShinyApp:::distribution.bayesXOutput(Output)$class
+        Variables <<- BayesXShinyApp:::variables(Output)
+        
+        updateSelectizeInput(session, "CovaritesAsVarying", choices = Variables)
+        
+        # choose which variables should varying and which should be fixed
+        toggleModal(session, "SpecifyCovariates", "open")
       })
     },
     warning = function(w) {
@@ -97,58 +117,101 @@ shinyServer(function(input, output, session) {
       createAlert(session, "Dialog", title = "Error", content = e$message)
     })
   })
-
-  observe({
-    updateSelectInput(session, "Parameter",
-                      choices = names(current$model$parameters))
+  
+  observeEvent(input$SaveModel, {
+    fixedGrid <- as.list(unlist(lapply(names(input),function(name) {
+      if(grepl("fixed",name) & !is.na(input[[name]][1]))
+        structure(input[[name]],names = gsub("fixed","",name))
+    })))
+    fixedCovariates <- names(fixedGrid)
+    
+    app_values$models <- append(app_values$models,
+                                structure(list(list(
+                                  output = Output,
+                                  variables = Variables,
+                                  fixedCovariates = fixedCovariates,
+                                  varyingCovariates = setdiff(Variables,fixedCovariates),
+                                  fixedGrid = fixedGrid,
+                                  dim = Dimension
+                                )),
+                                names = as.character(Path[[1]])))
+    
+    toggleModal(session, "SpecifyCovariates", "close")
   })
   
   observe({
-    if( is.null(current$model) )
-      return( NULL )
-    variables <- current$model$variables
-    if ( any(sapply(variables, function(v) is.null(input[[v]]))) )
+    if( is.null(selected$model) )
       return( NULL )
     
-    # create expression to find row-index in parameters: param[x == ? & ...] or all.equal(...) ...
-    # TODO: subset already here with input$Parameter 
-    obj <- "current$model$parameters"
-    cond_expr <- list()
-    for ( var in variables )
-      cond_expr[[var]] <- paste(var, input[[var]], sep = "==")
-    # cond_expr[[var]] <- paste("(sapply(", var, ",all.equal,", input[[var]], ") %in% 'TRUE')", sep = "")
-    cond <- paste(cond_expr, collapse = " & ")
-    subset <- eval(parse(text = sprintf("%s[%s]", obj, cond)))
+    vCovariates <- selected$model$varyingCovariates
+    vGrid <- sapply(vCovariates, function(v) input[[v]])
     
-    params <- lapply(subset, exp)
-    attributes(params) <- attributes(subset)
-    current$param_sample <- params
+    if ( any(sapply(vGrid,is.null)) | any(sapply(vGrid,is.na)) )
+      return( NULL )
     
-    xlim <- list(from = input$xmin, to = input$xmax)
-    if( any(is.na(xlim)) ) {
-      sequence <- list(from = 0.05, to = 1)
+    grid <- append(selected$model$fixedGrid, as.list(vGrid))
+    withProgress(message = "calculating parameters", value = 0, {
+      selected$param_sample <<- BayesXShinyApp:::parameters.bayesXOutput(selected$model$output,grid)
+    })
+  })
+  
+  observe({
+    if(is.null(selected$param_sample) || any(is.na(attr(selected$param_sample,"X"))))
+      return(NULL)
+    
+    AxisInputs <- names(input)[grepl("Axis",names(input))]
+    ranges <- structure(lapply(AxisInputs, function(axs) input[[axs]]),
+                        names = AxisInputs)
+    
+    if(any(is.na(ranges)))
+      return(NULL)
+    
+    variable <- gsub(pattern = ".{7}(y\\d)", "\\1", AxisInputs)
+    sequences <- tapply(AxisInputs, variable, function(axisRange){
+      max <- grepl("Max", axisRange)
+      seq.default(from = ranges[[axisRange[!max]]], 
+                  to = ranges[[axisRange[max]]],
+                  length.out = 100)
+    })
+    
+    if(length(sequences) == 1){
+      grid <- unlist(sequences)
     } else {
-      sequence <- xlim
+      grid <- expand.grid(sequences)
     }
-    x <- do.call(seq, append(sequence, list(length.out = 500)))
-    current$density <- BayesXShinyApp:::density.parameters(params, x = x)
+    
+    # # save command to commands$Rcode
+    # subsetting_code <- sprintf("param = %s[%s]", "params", cond)
+    # sequence_code <- sprintf("x = seq(%s, length.out = 200)",
+    #                          paste(names(sequence), sequence, sep = "=", collapse = ","))
+    # dens_code <- "dens = density(param, x = x)"
+    # rcode <- paste(subsetting_code, sequence_code, dens_code, sep = "\n") # combine all codes
+    # isolate(commands$Rcode[[input$Model]] <- append(commands$Rcode[[input$Model]], list(rcode)))
+    tryCatch({
+      withProgress(message = "calculating density", value = 0, {
+        selected$density <<- BayesXShinyApp:::density.parameters(selected$param_sample, 
+                                                                 x = grid)
+      })
+    },
+    warning = function(w) {
+      createAlert(session, "Dialog", title = "Warning", content = w$message)
+    },
+    error = function(e) {
+      createAlert(session, "Dialog", title = "Error", content = e$message)
+    })
   })
   
   output$Density <- renderPlot({
-    if( is.null(current$density) )
+    if( is.null(selected$density) )
       return( NULL )
     
-    ylim <- c(input$ymin, input$ymax)
-    if( any(is.na(ylim)) )
-      ylim <- NULL
-    
-    BayesXShinyApp:::plot.density(current$density, ylim = ylim)
+    plot(selected$density)
   })
   
   output$Densities <- renderPlot({
     # make dependency on Matplot Button
     input$Matplot
-    dens <- isolate(current$density)
+    dens <- isolate(selected$density)
     if( is.null(dens) )
       return( NULL )
     
@@ -161,28 +224,40 @@ shinyServer(function(input, output, session) {
     BayesXShinyApp:::matplot(dens, ylim = ylim, xlim = xlim)
   })
   
-  output$Parameter_Summary <- renderText({
-    if ( is.null(current$model) )
-      return( NULL )
-  })
-  
-  output$RExpression <- renderPlot({
+  output$MomentPlot <- renderPlot({
     input$Plot # make dependency on 'Plot' Button
     
-    if( is.null(current$model$parameters) | input$Plot == 0 )
+    if( input$Plot == 0 )
       return( NULL )
     
     # Use isolate() to avoid dependency on input$RExpression
     tryCatch({
       isolate({
-        eval(parse(text = input$RExpression), 
-             do.call(append, list(x = current$model$parameters, 
-                                  values = attr(current$model$parameters, "X"))))
+        moment_fun <- input$Moment
+        varying <- input$CovariateVarying
+        range <- eval(parse(text = input$Range))
+        
+        fixed <- setdiff(selected$model$varyingCovariates,varying)
+        fixed_value <- as.list(sapply(fixed,function(v) input[[v]]))
+        
+        covariates <- append(fixed_value,
+                             structure(list(range), names = varying))
+        
+        # extend grid if there are model based fixed Covariates!
+        if(length(selected$model$fixedGrid) > 0)
+          covariates <- append(covariates, selected$model$fixedGrid)
+        
+        grid <- expand.grid(covariates)
+        
+        withProgress(message = "calculating parameters", value = 0, {
+          params <- BayesXShinyApp:::parameters.bayesXOutput(selected$model$output,grid)
+        })
+        
+        rcode <- sprintf("lines(%s(params))", moment_fun)
+        eval(parse(text = rcode))
         # save command to commands$Rcode
-        tmpl <- "with(%s, %s)"
-        rcode <- sprintf(tmpl, "Data", input$RExpression)
-        commands$Rcode[[input$Model]] <- append(commands$Rcode[[input$Model]], 
-                                                list(rcode))
+        # commands$Rcode[[input$Model]] <- append(commands$Rcode[[input$Model]],
+        #                                         list(rcode))
       })
     },
     warning = function(w) {

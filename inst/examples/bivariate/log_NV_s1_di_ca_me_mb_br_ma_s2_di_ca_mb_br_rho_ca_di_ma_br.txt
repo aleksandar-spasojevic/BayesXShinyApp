@@ -1,0 +1,4202 @@
+> dataset d
+> d.infile using /Users/aleksandarspasojevic/Desktop/template_bivariate/data/india.raw
+NOTE: 52 variables with 24316 observations read from file
+/Users/aleksandarspasojevic/Desktop/template_bivariate/data/india.raw
+
+> d.generate distH2 = distH
+> d.generate distH3 = distH
+> d.generate distH4 = distH
+> d.generate distH5 = distH
+> d.generate distH6 = distH
+> d.generate distH7 = distH
+> d.generate distH8 = distH
+> d.generate distH9 = distH
+> d.generate distH10 = distH
+> map m
+> m. infile using /Users/aleksandarspasojevic/Desktop/template_bivariate/data/india_dist_sort.bnd
+NOTE: 440 regions read from file /Users/aleksandarspasojevic/Desktop/template_bivariate/data/india_dist_sort.bnd
+> mcmcreg yreg
+> yreg.outfile = /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br
+> yreg.hregress stunting2=const+cage(pspline,lambda=100)+distH9(spatial,map=m,lambda=100)+mage(pspline,lambda=100)+breastfeeding(pspline,lambda=100)+csex+ctwin+munemployed+motorcycle+mreligion2+mreligion3+mreligion4+mreligion5+electricity+radio+television+refrigerator+bicycle+car,hlevel=1 family=bivnormal equationtype=rho iterations=52000 step=50 burnin=2000 using d
+NOTE: no observations for region 47
+NOTE: no observations for region 38
+> yreg.hregress wasting2=const+distH7(spatial,map=m,lambda=100)+cage(pspline,lambda=100)+mbmi(pspline,lambda=100)+csex+ctwin+munemployed+motorcycle+mreligion2+mreligion3+mreligion4+mreligion5+electricity+radio+television+refrigerator+bicycle+car, hlevel=1 family=bivnormal equationtype=sigma using d
+NOTE: no observations for region 47
+NOTE: no observations for region 38
+> yreg.hregress stunting2=const+distH5(spatial,map=m,lambda=100)+cage(pspline,lambda=100)+medu(pspline,lambda=100)+breastfeeding(pspline,lambda=100)+mage(pspline,lambda=100)+mbmi(pspline,lambda=100)+csex+ctwin+munemployed+motorcycle+mreligion2+mreligion3+mreligion4+mreligion5+electricity+radio+television+refrigerator+bicycle+car,hlevel=1  family=bivnormal equationtype=sigma using d
+NOTE: no observations for region 47
+NOTE: no observations for region 38
+> yreg.hregress wasting2=const+cage(pspline,lambda=100)+breastfeeding(pspline,lambda=100)+mbmi(pspline,lambda=100)+mage(pspline,lambda=100)+medu(pspline,lambda=100)+edupartner(pspline,lambda=100)+distH3(spatial,map=m,lambda=100)+csex+ctwin+munemployed+motorcycle+mreligion2+mreligion3+mreligion4+mreligion5+electricity+radio+television+refrigerator+bicycle+car, hlevel=1 family=bivnormal equationtype=mu using d
+NOTE: no observations for region 47
+NOTE: no observations for region 38
+> yreg.hregress stunting2=const+cage(pspline,lambda=100)+breastfeeding(pspline,lambda=100)+mbmi(pspline,lambda=100)+mage(pspline,lambda=100)+medu(pspline,lambda=100)+edupartner(pspline,lambda=100)+distH(spatial,map=m,lambda=100)+csex+ctwin+munemployed+motorcycle+mreligion2+mreligion3+mreligion4+mreligion5+electricity+radio+television+refrigerator+bicycle+car,hlevel=1 predict=light setseed=320248 family=bivnormal equationtype=mu using d
+NOTE: no observations for region 47
+NOTE: no observations for region 38
+
+MCMCREG OBJECT yreg: MAIN mu REGRESSION_stunting2
+
+GENERAL OPTIONS:
+
+  Number of iterations:  52000
+  Burn-in period:        2000
+  Thinning parameter:    50
+  Saveestimation:        disabled
+
+
+
+RESPONSE DISTRIBUTION:
+
+  Family: Bivariate Normal Distribution - mu
+  Number of observations: 24316
+  Number of observations with positive weights: 24316
+
+  Response function (mu): identity
+
+
+OPTIONS FOR ESTIMATION:
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of cage
+
+  Prior: second order random walk
+  Number of knots: 20
+  First knot: -0.35
+  Last knot: 35.35
+  Knot distance: 1.8789474
+  Degree of Splines: 3
+  centered sampling
+  B-spline basis may be created e.g. in STATA by: 
+  bspline , xvar(x) generate(Bs) power(3) knots(-0.35(1.8789474)35.35) 
+  where x contains the values for which the basis functions should be created
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of breastfeeding
+
+  Prior: second order random walk
+  Number of knots: 20
+  First knot: -0.35
+  Last knot: 35.35
+  Knot distance: 1.8789474
+  Degree of Splines: 3
+  centered sampling
+  B-spline basis may be created e.g. in STATA by: 
+  bspline , xvar(x) generate(Bs) power(3) knots(-0.35(1.8789474)35.35) 
+  where x contains the values for which the basis functions should be created
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mbmi
+
+  Prior: second order random walk
+  Number of knots: 20
+  First knot: 12.176
+  Last knot: 40.124
+  Knot distance: 1.4709474
+  Degree of Splines: 3
+  centered sampling
+  B-spline basis may be created e.g. in STATA by: 
+  bspline , xvar(x) generate(Bs) power(3) knots(12.176(1.4709474)40.124) 
+  where x contains the values for which the basis functions should be created
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mage
+
+  Prior: second order random walk
+  Number of knots: 20
+  First knot: 12.64
+  Last knot: 49.36
+  Knot distance: 1.9326316
+  Degree of Splines: 3
+  centered sampling
+  B-spline basis may be created e.g. in STATA by: 
+  bspline , xvar(x) generate(Bs) power(3) knots(12.64(1.9326316)49.36) 
+  where x contains the values for which the basis functions should be created
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of medu
+
+  Prior: second order random walk
+  Number of knots: 20
+  First knot: -0.22
+  Last knot: 22.22
+  Knot distance: 1.1810526
+  Degree of Splines: 3
+  centered sampling
+  B-spline basis may be created e.g. in STATA by: 
+  bspline , xvar(x) generate(Bs) power(3) knots(-0.22(1.1810526)22.22) 
+  where x contains the values for which the basis functions should be created
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of edupartner
+
+  Prior: second order random walk
+  Number of knots: 20
+  First knot: -0.22
+  Last knot: 22.22
+  Knot distance: 1.1810526
+  Degree of Splines: 3
+  centered sampling
+  B-spline basis may be created e.g. in STATA by: 
+  bspline , xvar(x) generate(Bs) power(3) knots(-0.22(1.1810526)22.22) 
+  where x contains the values for which the basis functions should be created
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+  MAIN_mu_REGRESSION_stunting2: Spatial effect (MRF) of distH
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+
+
+MCMCREG OBJECT yreg: MAIN mu REGRESSION_wasting2
+
+RESPONSE DISTRIBUTION:
+
+  Family: Bivariate Normal Distribution - mu
+  Number of observations: 24316
+  Number of observations with positive weights: 24316
+
+  Response function (mu): identity
+
+
+OPTIONS FOR ESTIMATION:
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of cage
+
+  Prior: second order random walk
+  Number of knots: 20
+  First knot: -0.35
+  Last knot: 35.35
+  Knot distance: 1.8789474
+  Degree of Splines: 3
+  centered sampling
+  B-spline basis may be created e.g. in STATA by: 
+  bspline , xvar(x) generate(Bs) power(3) knots(-0.35(1.8789474)35.35) 
+  where x contains the values for which the basis functions should be created
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of breastfeeding
+
+  Prior: second order random walk
+  Number of knots: 20
+  First knot: -0.35
+  Last knot: 35.35
+  Knot distance: 1.8789474
+  Degree of Splines: 3
+  centered sampling
+  B-spline basis may be created e.g. in STATA by: 
+  bspline , xvar(x) generate(Bs) power(3) knots(-0.35(1.8789474)35.35) 
+  where x contains the values for which the basis functions should be created
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of mbmi
+
+  Prior: second order random walk
+  Number of knots: 20
+  First knot: 12.176
+  Last knot: 40.124
+  Knot distance: 1.4709474
+  Degree of Splines: 3
+  centered sampling
+  B-spline basis may be created e.g. in STATA by: 
+  bspline , xvar(x) generate(Bs) power(3) knots(12.176(1.4709474)40.124) 
+  where x contains the values for which the basis functions should be created
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of mage
+
+  Prior: second order random walk
+  Number of knots: 20
+  First knot: 12.64
+  Last knot: 49.36
+  Knot distance: 1.9326316
+  Degree of Splines: 3
+  centered sampling
+  B-spline basis may be created e.g. in STATA by: 
+  bspline , xvar(x) generate(Bs) power(3) knots(12.64(1.9326316)49.36) 
+  where x contains the values for which the basis functions should be created
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of medu
+
+  Prior: second order random walk
+  Number of knots: 20
+  First knot: -0.22
+  Last knot: 22.22
+  Knot distance: 1.1810526
+  Degree of Splines: 3
+  centered sampling
+  B-spline basis may be created e.g. in STATA by: 
+  bspline , xvar(x) generate(Bs) power(3) knots(-0.22(1.1810526)22.22) 
+  where x contains the values for which the basis functions should be created
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of edupartner
+
+  Prior: second order random walk
+  Number of knots: 20
+  First knot: -0.22
+  Last knot: 22.22
+  Knot distance: 1.1810526
+  Degree of Splines: 3
+  centered sampling
+  B-spline basis may be created e.g. in STATA by: 
+  bspline , xvar(x) generate(Bs) power(3) knots(-0.22(1.1810526)22.22) 
+  where x contains the values for which the basis functions should be created
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+  MAIN_mu_REGRESSION_wasting2: Spatial effect (MRF) of distH3
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+
+
+MCMCREG OBJECT yreg: MAIN sigma REGRESSION_stunting2
+
+RESPONSE DISTRIBUTION:
+
+  Family: Bivariate Normal Distribution - sigma
+  Number of observations: 24316
+  Number of observations with positive weights: 24316
+
+  Link function (sigma): log
+
+
+OPTIONS FOR ESTIMATION:
+
+  MAIN_sigma_REGRESSION_stunting2: Spatial effect (MRF) of distH5
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of cage
+
+  Prior: second order random walk
+  Number of knots: 20
+  First knot: -0.35
+  Last knot: 35.35
+  Knot distance: 1.8789474
+  Degree of Splines: 3
+  centered sampling
+  B-spline basis may be created e.g. in STATA by: 
+  bspline , xvar(x) generate(Bs) power(3) knots(-0.35(1.8789474)35.35) 
+  where x contains the values for which the basis functions should be created
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of medu
+
+  Prior: second order random walk
+  Number of knots: 20
+  First knot: -0.22
+  Last knot: 22.22
+  Knot distance: 1.1810526
+  Degree of Splines: 3
+  centered sampling
+  B-spline basis may be created e.g. in STATA by: 
+  bspline , xvar(x) generate(Bs) power(3) knots(-0.22(1.1810526)22.22) 
+  where x contains the values for which the basis functions should be created
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of breastfeeding
+
+  Prior: second order random walk
+  Number of knots: 20
+  First knot: -0.35
+  Last knot: 35.35
+  Knot distance: 1.8789474
+  Degree of Splines: 3
+  centered sampling
+  B-spline basis may be created e.g. in STATA by: 
+  bspline , xvar(x) generate(Bs) power(3) knots(-0.35(1.8789474)35.35) 
+  where x contains the values for which the basis functions should be created
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mage
+
+  Prior: second order random walk
+  Number of knots: 20
+  First knot: 12.64
+  Last knot: 49.36
+  Knot distance: 1.9326316
+  Degree of Splines: 3
+  centered sampling
+  B-spline basis may be created e.g. in STATA by: 
+  bspline , xvar(x) generate(Bs) power(3) knots(12.64(1.9326316)49.36) 
+  where x contains the values for which the basis functions should be created
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mbmi
+
+  Prior: second order random walk
+  Number of knots: 20
+  First knot: 12.176
+  Last knot: 40.124
+  Knot distance: 1.4709474
+  Degree of Splines: 3
+  centered sampling
+  B-spline basis may be created e.g. in STATA by: 
+  bspline , xvar(x) generate(Bs) power(3) knots(12.176(1.4709474)40.124) 
+  where x contains the values for which the basis functions should be created
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+
+
+MCMCREG OBJECT yreg: MAIN sigma REGRESSION_wasting2
+
+RESPONSE DISTRIBUTION:
+
+  Family: Bivariate Normal Distribution - sigma
+  Number of observations: 24316
+  Number of observations with positive weights: 24316
+
+  Link function (sigma): log
+
+
+OPTIONS FOR ESTIMATION:
+
+  MAIN_sigma_REGRESSION_wasting2: Spatial effect (MRF) of distH7
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+  MAIN_sigma_REGRESSION_wasting2:  Nonlinear effect (P-spline) of cage
+
+  Prior: second order random walk
+  Number of knots: 20
+  First knot: -0.35
+  Last knot: 35.35
+  Knot distance: 1.8789474
+  Degree of Splines: 3
+  centered sampling
+  B-spline basis may be created e.g. in STATA by: 
+  bspline , xvar(x) generate(Bs) power(3) knots(-0.35(1.8789474)35.35) 
+  where x contains the values for which the basis functions should be created
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+  MAIN_sigma_REGRESSION_wasting2:  Nonlinear effect (P-spline) of mbmi
+
+  Prior: second order random walk
+  Number of knots: 20
+  First knot: 12.176
+  Last knot: 40.124
+  Knot distance: 1.4709474
+  Degree of Splines: 3
+  centered sampling
+  B-spline basis may be created e.g. in STATA by: 
+  bspline , xvar(x) generate(Bs) power(3) knots(12.176(1.4709474)40.124) 
+  where x contains the values for which the basis functions should be created
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+
+
+MCMCREG OBJECT yreg: MAIN rho REGRESSION_stunting2
+
+RESPONSE DISTRIBUTION:
+
+  Family: Bivariate Normal Distribution - rho
+  Number of observations: 24316
+  Number of observations with positive weights: 24316
+
+  Link function (rho): rhogit
+
+
+OPTIONS FOR ESTIMATION:
+
+  MAIN_rho_REGRESSION_stunting2:  Nonlinear effect (P-spline) of cage
+
+  Prior: second order random walk
+  Number of knots: 20
+  First knot: -0.35
+  Last knot: 35.35
+  Knot distance: 1.8789474
+  Degree of Splines: 3
+  centered sampling
+  B-spline basis may be created e.g. in STATA by: 
+  bspline , xvar(x) generate(Bs) power(3) knots(-0.35(1.8789474)35.35) 
+  where x contains the values for which the basis functions should be created
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+  MAIN_rho_REGRESSION_stunting2: Spatial effect (MRF) of distH9
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+  MAIN_rho_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mage
+
+  Prior: second order random walk
+  Number of knots: 20
+  First knot: 12.64
+  Last knot: 49.36
+  Knot distance: 1.9326316
+  Degree of Splines: 3
+  centered sampling
+  B-spline basis may be created e.g. in STATA by: 
+  bspline , xvar(x) generate(Bs) power(3) knots(12.64(1.9326316)49.36) 
+  where x contains the values for which the basis functions should be created
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+  MAIN_rho_REGRESSION_stunting2:  Nonlinear effect (P-spline) of breastfeeding
+
+  Prior: second order random walk
+  Number of knots: 20
+  First knot: -0.35
+  Last knot: 35.35
+  Knot distance: 1.8789474
+  Degree of Splines: 3
+  centered sampling
+  B-spline basis may be created e.g. in STATA by: 
+  bspline , xvar(x) generate(Bs) power(3) knots(-0.35(1.8789474)35.35) 
+  where x contains the values for which the basis functions should be created
+
+  Inverse gamma prior
+  Hyperprior a for variance parameter: 0.001
+  Hyperprior b for variance parameter: 0.001
+
+
+MCMC SIMULATION STARTED
+
+  COMPUTING STARTING VALUES (MAY TAKE SOME TIME)
+  ITERATION: 1
+
+  APPROXIMATE RUN TIME: 71 minutes 50 seconds
+
+  ITERATION: 1000
+  ITERATION: 2000
+  ITERATION: 3000
+  ITERATION: 4000
+  ITERATION: 5000
+  ITERATION: 6000
+  ITERATION: 7000
+  ITERATION: 8000
+  ITERATION: 9000
+  ITERATION: 10000
+  ITERATION: 11000
+  ITERATION: 12000
+  ITERATION: 13000
+  ITERATION: 14000
+  ITERATION: 15000
+  ITERATION: 16000
+  ITERATION: 17000
+  ITERATION: 18000
+
+  MAIN_mu_REGRESSION_stunting2: linear effects
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0591426
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of cage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0662119
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of cage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of breastfeeding
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.109088
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of breastfeeding
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mbmi
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.126168
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of mbmi
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.328023
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of mage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of medu
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.11734
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of medu
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of edupartner
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.134311
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of edupartner
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Spatial effect (MRF) of distH
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.674862
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of spatial effect of distH
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_wasting2: linear effects
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.109815
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of cage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0443605
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of cage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of breastfeeding
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.164069
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of breastfeeding
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of mbmi
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0835324
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of mbmi
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of mage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.429055
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of mage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of medu
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.307067
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of medu
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of edupartner
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.04336
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of edupartner
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Spatial effect (MRF) of distH3
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.638717
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of spatial effect of distH3
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: linear effects
+
+  Acceptance rate:    91.8 %
+
+  Relative Changes in  
+
+  Mean:               0.0990955
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Spatial effect (MRF) of distH5
+
+  Acceptance rate:    17.95 %
+
+  Relative Changes in  
+
+  Mean:               0.598109
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of spatial effect of distH5
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of cage
+
+  Acceptance rate:    95.84 %
+
+  Relative Changes in  
+
+  Mean:               0.222239
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of nonlinear effect of cage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of medu
+
+  Acceptance rate:    92.75 %
+
+  Relative Changes in  
+
+  Mean:               0.39933
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of nonlinear effect of medu
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of breastfeeding
+
+  Acceptance rate:    96.42 %
+
+  Relative Changes in  
+
+  Mean:               0.241932
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of nonlinear effect of breastfeeding
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mage
+
+  Acceptance rate:    95.72 %
+
+  Relative Changes in  
+
+  Mean:               0.541763
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of nonlinear effect of mage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mbmi
+
+  Acceptance rate:    92.07 %
+
+  Relative Changes in  
+
+  Mean:               0.360935
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of nonlinear effect of mbmi
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_sigma_REGRESSION_wasting2: linear effects
+
+  Acceptance rate:    91.13 %
+
+  Relative Changes in  
+
+  Mean:               0.448817
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_sigma_REGRESSION_wasting2: Spatial effect (MRF) of distH7
+
+  Acceptance rate:    9.675 %
+
+  Relative Changes in  
+
+  Mean:               0.792922
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_sigma_REGRESSION_wasting2: Variance of spatial effect of distH7
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_sigma_REGRESSION_wasting2:  Nonlinear effect (P-spline) of cage
+
+  Acceptance rate:    95.93 %
+
+  Relative Changes in  
+
+  Mean:               0.0967603
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_sigma_REGRESSION_wasting2: Variance of nonlinear effect of cage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_sigma_REGRESSION_wasting2:  Nonlinear effect (P-spline) of mbmi
+
+  Acceptance rate:    90.51 %
+
+  Relative Changes in  
+
+  Mean:               0.297653
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_sigma_REGRESSION_wasting2: Variance of nonlinear effect of mbmi
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_rho_REGRESSION_stunting2: linear effects
+
+  Acceptance rate:    86.54 %
+
+  Relative Changes in  
+
+  Mean:               0.169251
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_rho_REGRESSION_stunting2:  Nonlinear effect (P-spline) of cage
+
+  Acceptance rate:    96.59 %
+
+  Relative Changes in  
+
+  Mean:               0.0789497
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_rho_REGRESSION_stunting2: Variance of nonlinear effect of cage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_rho_REGRESSION_stunting2: Spatial effect (MRF) of distH9
+
+  Acceptance rate:    36.31 %
+
+  Relative Changes in  
+
+  Mean:               0.575207
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_rho_REGRESSION_stunting2: Variance of spatial effect of distH9
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_rho_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mage
+
+  Acceptance rate:    93.37 %
+
+  Relative Changes in  
+
+  Mean:               0.518804
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_rho_REGRESSION_stunting2: Variance of nonlinear effect of mage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_rho_REGRESSION_stunting2:  Nonlinear effect (P-spline) of breastfeeding
+
+  Acceptance rate:    95.54 %
+
+  Relative Changes in  
+
+  Mean:               0.347213
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+
+  MAIN_rho_REGRESSION_stunting2: Variance of nonlinear effect of breastfeeding
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               1.79769e+308
+  Variance:           1.79769e+308
+  Minimum:            1.79769e+308
+  Maximum:            1.79769e+308
+
+
+  ITERATION: 19000
+  ITERATION: 20000
+  ITERATION: 21000
+  ITERATION: 22000
+  ITERATION: 23000
+  ITERATION: 24000
+  ITERATION: 25000
+  ITERATION: 26000
+  ITERATION: 27000
+  ITERATION: 28000
+  ITERATION: 29000
+  ITERATION: 30000
+  ITERATION: 31000
+  ITERATION: 32000
+  ITERATION: 33000
+  ITERATION: 34000
+  ITERATION: 35000
+
+  MAIN_mu_REGRESSION_stunting2: linear effects
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00305249
+  Variance:           0.0711925
+  Minimum:            0.040397
+  Maximum:            0.0246729
+
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of cage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00322672
+  Variance:           0.0564201
+  Minimum:            0.0456666
+  Maximum:            0.0279407
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of cage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0279221
+  Variance:           0.0190625
+  Minimum:            0.000772631
+  Maximum:            0.174945
+
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of breastfeeding
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00664273
+  Variance:           0.0830338
+  Minimum:            0.0638761
+  Maximum:            0.120213
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of breastfeeding
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.039817
+  Variance:           0.0731364
+  Minimum:            0.00137834
+  Maximum:            4.60659e-09
+
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mbmi
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00823411
+  Variance:           0.118874
+  Minimum:            0.165596
+  Maximum:            0.0735829
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of mbmi
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0616915
+  Variance:           0.151763
+  Minimum:            0
+  Maximum:            0
+
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0527416
+  Variance:           0.0231628
+  Minimum:            0.127454
+  Maximum:            0.0680393
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of mage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0567468
+  Variance:           0.106116
+  Minimum:            3.0022e-07
+  Maximum:            0.0711315
+
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of medu
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00833949
+  Variance:           0.0120469
+  Minimum:            0.0839091
+  Maximum:            0.0174892
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of medu
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00166478
+  Variance:           0.0349954
+  Minimum:            0.201724
+  Maximum:            3.70404e-07
+
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of edupartner
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.013143
+  Variance:           0.029207
+  Minimum:            0.00188013
+  Maximum:            0.0233209
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of edupartner
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0101656
+  Variance:           0.11326
+  Minimum:            0
+  Maximum:            0
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Spatial effect (MRF) of distH
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.018148
+  Variance:           0.0568529
+  Minimum:            0.101487
+  Maximum:            0.1132
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of spatial effect of distH
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00925013
+  Variance:           0.0558373
+  Minimum:            0.0896092
+  Maximum:            0.0680162
+
+
+
+  MAIN_mu_REGRESSION_wasting2: linear effects
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00702897
+  Variance:           0.0566173
+  Minimum:            0.0384154
+  Maximum:            0.0276795
+
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of cage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00472466
+  Variance:           0.039433
+  Minimum:            0.0794622
+  Maximum:            0.0300385
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of cage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00440364
+  Variance:           0.0974109
+  Minimum:            1.12814e-05
+  Maximum:            0.1319
+
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of breastfeeding
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0138632
+  Variance:           0.0672685
+  Minimum:            0.103034
+  Maximum:            0.142308
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of breastfeeding
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00125955
+  Variance:           0.0370456
+  Minimum:            0.359004
+  Maximum:            0.18413
+
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of mbmi
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0044741
+  Variance:           0.033604
+  Minimum:            0.0946311
+  Maximum:            0.0776312
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of mbmi
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00628977
+  Variance:           0.0804513
+  Minimum:            8.91228e-07
+  Maximum:            0.0844632
+
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of mage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0406751
+  Variance:           0.0157245
+  Minimum:            0.0933338
+  Maximum:            0.141826
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of mage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0107373
+  Variance:           0.0590026
+  Minimum:            0
+  Maximum:            0
+
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of medu
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0476076
+  Variance:           0.0598913
+  Minimum:            0.0686386
+  Maximum:            0.0711018
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of medu
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00921318
+  Variance:           0.0323788
+  Minimum:            0.0423333
+  Maximum:            6.3822e-08
+
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of edupartner
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0809183
+  Variance:           0.0467453
+  Minimum:            0.132434
+  Maximum:            0.293695
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of edupartner
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00792951
+  Variance:           0.0138771
+  Minimum:            9.45599e-08
+  Maximum:            0.0189581
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Spatial effect (MRF) of distH3
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0172835
+  Variance:           0.059531
+  Minimum:            0.114627
+  Maximum:            0.103413
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of spatial effect of distH3
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00982895
+  Variance:           0.116324
+  Minimum:            0
+  Maximum:            0
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: linear effects
+
+  Acceptance rate:    91.68 %
+
+  Relative Changes in  
+
+  Mean:               0.00829546
+  Variance:           0.066417
+  Minimum:            0.10681
+  Maximum:            0.0416758
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Spatial effect (MRF) of distH5
+
+  Acceptance rate:    18.23 %
+
+  Relative Changes in  
+
+  Mean:               0.0252349
+  Variance:           0.0522586
+  Minimum:            0.118047
+  Maximum:            0.131687
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of spatial effect of distH5
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00529356
+  Variance:           0.0223668
+  Minimum:            0.000121164
+  Maximum:            0.0383327
+
+
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of cage
+
+  Acceptance rate:    95.82 %
+
+  Relative Changes in  
+
+  Mean:               0.0154102
+  Variance:           0.0378964
+  Minimum:            0.113112
+  Maximum:            0.0469689
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of nonlinear effect of cage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0161674
+  Variance:           0.19897
+  Minimum:            0.14803
+  Maximum:            0.245804
+
+
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of medu
+
+  Acceptance rate:    92.53 %
+
+  Relative Changes in  
+
+  Mean:               0.014575
+  Variance:           0.0385982
+  Minimum:            0.0702771
+  Maximum:            0.0559131
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of nonlinear effect of medu
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0202865
+  Variance:           0.0273249
+  Minimum:            0.29918
+  Maximum:            0.117449
+
+
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of breastfeeding
+
+  Acceptance rate:    96.43 %
+
+  Relative Changes in  
+
+  Mean:               0.0133019
+  Variance:           0.0568282
+  Minimum:            0.115302
+  Maximum:            0.0538146
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of nonlinear effect of breastfeeding
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0324841
+  Variance:           0.203317
+  Minimum:            0.338645
+  Maximum:            0.592718
+
+
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mage
+
+  Acceptance rate:    95.64 %
+
+  Relative Changes in  
+
+  Mean:               0.0251911
+  Variance:           0.0494484
+  Minimum:            0.0461457
+  Maximum:            0.0390822
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of nonlinear effect of mage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0416589
+  Variance:           0.0251807
+  Minimum:            0
+  Maximum:            0
+
+
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mbmi
+
+  Acceptance rate:    92.18 %
+
+  Relative Changes in  
+
+  Mean:               0.0204033
+  Variance:           0.0151572
+  Minimum:            0.104888
+  Maximum:            0.127947
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of nonlinear effect of mbmi
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0599643
+  Variance:           0.105851
+  Minimum:            0.365317
+  Maximum:            0.0331455
+
+
+
+  MAIN_sigma_REGRESSION_wasting2: linear effects
+
+  Acceptance rate:    90.94 %
+
+  Relative Changes in  
+
+  Mean:               0.0159621
+  Variance:           0.0473311
+  Minimum:            0.169562
+  Maximum:            0.161189
+
+
+
+  MAIN_sigma_REGRESSION_wasting2: Spatial effect (MRF) of distH7
+
+  Acceptance rate:    9.365 %
+
+  Relative Changes in  
+
+  Mean:               0.0282092
+  Variance:           0.0666194
+  Minimum:            0.0945343
+  Maximum:            0.130273
+
+
+
+  MAIN_sigma_REGRESSION_wasting2: Variance of spatial effect of distH7
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0229951
+  Variance:           0.0381901
+  Minimum:            0.00051317
+  Maximum:            0.0530128
+
+
+
+  MAIN_sigma_REGRESSION_wasting2:  Nonlinear effect (P-spline) of cage
+
+  Acceptance rate:    95.85 %
+
+  Relative Changes in  
+
+  Mean:               0.00504638
+  Variance:           0.0567724
+  Minimum:            0.0798865
+  Maximum:            0.0499825
+
+
+
+  MAIN_sigma_REGRESSION_wasting2: Variance of nonlinear effect of cage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00118553
+  Variance:           0.0497495
+  Minimum:            0.00760842
+  Maximum:            0.276395
+
+
+
+  MAIN_sigma_REGRESSION_wasting2:  Nonlinear effect (P-spline) of mbmi
+
+  Acceptance rate:    90.66 %
+
+  Relative Changes in  
+
+  Mean:               0.0157758
+  Variance:           0.0404455
+  Minimum:            0.0404128
+  Maximum:            0.0917954
+
+
+
+  MAIN_sigma_REGRESSION_wasting2: Variance of nonlinear effect of mbmi
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0206932
+  Variance:           0.0583643
+  Minimum:            0.586155
+  Maximum:            0.305998
+
+
+
+  MAIN_rho_REGRESSION_stunting2: linear effects
+
+  Acceptance rate:    86.69 %
+
+  Relative Changes in  
+
+  Mean:               0.0278935
+  Variance:           0.0453625
+  Minimum:            0.0719522
+  Maximum:            0.0628562
+
+
+
+  MAIN_rho_REGRESSION_stunting2:  Nonlinear effect (P-spline) of cage
+
+  Acceptance rate:    96.48 %
+
+  Relative Changes in  
+
+  Mean:               0.00548425
+  Variance:           0.0440269
+  Minimum:            0.0601535
+  Maximum:            0.0724327
+
+
+
+  MAIN_rho_REGRESSION_stunting2: Variance of nonlinear effect of cage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0532868
+  Variance:           0.0715146
+  Minimum:            6.40297e-08
+  Maximum:            0.0599857
+
+
+
+  MAIN_rho_REGRESSION_stunting2: Spatial effect (MRF) of distH9
+
+  Acceptance rate:    35.95 %
+
+  Relative Changes in  
+
+  Mean:               0.0404645
+  Variance:           0.0551033
+  Minimum:            0.133827
+  Maximum:            0.132356
+
+
+
+  MAIN_rho_REGRESSION_stunting2: Variance of spatial effect of distH9
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0258285
+  Variance:           0.0663219
+  Minimum:            0.0420236
+  Maximum:            5.24244e-05
+
+
+
+  MAIN_rho_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mage
+
+  Acceptance rate:    93.47 %
+
+  Relative Changes in  
+
+  Mean:               0.0263774
+  Variance:           0.0835229
+  Minimum:            0.115266
+  Maximum:            0.05181
+
+
+
+  MAIN_rho_REGRESSION_stunting2: Variance of nonlinear effect of mage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.000996623
+  Variance:           0.109084
+  Minimum:            0
+  Maximum:            0
+
+
+
+  MAIN_rho_REGRESSION_stunting2:  Nonlinear effect (P-spline) of breastfeeding
+
+  Acceptance rate:    95.49 %
+
+  Relative Changes in  
+
+  Mean:               0.026942
+  Variance:           0.0584453
+  Minimum:            0.206861
+  Maximum:            0.140851
+
+
+
+  MAIN_rho_REGRESSION_stunting2: Variance of nonlinear effect of breastfeeding
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.021965
+  Variance:           0.11885
+  Minimum:            0.310566
+  Maximum:            0.336956
+
+
+  ITERATION: 36000
+  ITERATION: 37000
+  ITERATION: 38000
+  ITERATION: 39000
+  ITERATION: 40000
+  ITERATION: 41000
+  ITERATION: 42000
+  ITERATION: 43000
+  ITERATION: 44000
+  ITERATION: 45000
+  ITERATION: 46000
+  ITERATION: 47000
+  ITERATION: 48000
+  ITERATION: 49000
+  ITERATION: 50000
+  ITERATION: 51000
+
+  MAIN_mu_REGRESSION_stunting2: linear effects
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00420471
+  Variance:           0.0320881
+  Minimum:            0.0145411
+  Maximum:            0.0168433
+
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of cage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00155482
+  Variance:           0.0258269
+  Minimum:            0.0115387
+  Maximum:            0.0149262
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of cage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0127972
+  Variance:           0.0954021
+  Minimum:            0.0625237
+  Maximum:            0.000294548
+
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of breastfeeding
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00483553
+  Variance:           0.0241252
+  Minimum:            0.0567243
+  Maximum:            0.0412872
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of breastfeeding
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00894099
+  Variance:           0.0268254
+  Minimum:            0
+  Maximum:            0
+
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mbmi
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00389799
+  Variance:           0.0338113
+  Minimum:            0.0505697
+  Maximum:            0.0578591
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of mbmi
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.036159
+  Variance:           0.039912
+  Minimum:            4.57833e-08
+  Maximum:            0.0138701
+
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0117839
+  Variance:           0.0539574
+  Minimum:            0.105813
+  Maximum:            0.0481366
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of mage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00105091
+  Variance:           0.0548055
+  Minimum:            0
+  Maximum:            0
+
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of medu
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00210748
+  Variance:           0.0319509
+  Minimum:            0.051175
+  Maximum:            0.0509546
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of medu
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0174404
+  Variance:           0.0124875
+  Minimum:            0.418094
+  Maximum:            1.31929e-06
+
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of edupartner
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0160682
+  Variance:           0.0310592
+  Minimum:            0.0310848
+  Maximum:            0.0157373
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of edupartner
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0140663
+  Variance:           0.0537238
+  Minimum:            0.0839881
+  Maximum:            2.18916e-07
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Spatial effect (MRF) of distH
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0105861
+  Variance:           0.0316218
+  Minimum:            0.0699208
+  Maximum:            0.0617728
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of spatial effect of distH
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00131337
+  Variance:           0.0431084
+  Minimum:            0
+  Maximum:            0
+
+
+
+  MAIN_mu_REGRESSION_wasting2: linear effects
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00390106
+  Variance:           0.0134446
+  Minimum:            0.0213293
+  Maximum:            0.0337183
+
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of cage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00251607
+  Variance:           0.0483885
+  Minimum:            0.031363
+  Maximum:            0.0375617
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of cage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0141009
+  Variance:           0.0622689
+  Minimum:            0
+  Maximum:            0
+
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of breastfeeding
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00851947
+  Variance:           0.0282801
+  Minimum:            0.0847876
+  Maximum:            0.109022
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of breastfeeding
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00809943
+  Variance:           0.0464586
+  Minimum:            0.149556
+  Maximum:            2.19627e-07
+
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of mbmi
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00454797
+  Variance:           0.0170971
+  Minimum:            0.0403199
+  Maximum:            0.0430046
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of mbmi
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00744462
+  Variance:           0.076447
+  Minimum:            0.175087
+  Maximum:            2.23958e-06
+
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of mage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0158427
+  Variance:           0.0370069
+  Minimum:            0.14699
+  Maximum:            0.218753
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of mage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0078075
+  Variance:           0.0124127
+  Minimum:            8.95266e-08
+  Maximum:            0.0104893
+
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of medu
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0100722
+  Variance:           0.0229653
+  Minimum:            0.0517827
+  Maximum:            0.12962
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of medu
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.000919592
+  Variance:           0.0149858
+  Minimum:            0.241802
+  Maximum:            0.113909
+
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of edupartner
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0332292
+  Variance:           0.0270773
+  Minimum:            0.186498
+  Maximum:            0.0431184
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of edupartner
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00701413
+  Variance:           0.0166991
+  Minimum:            5.20457e-07
+  Maximum:            0.116502
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Spatial effect (MRF) of distH3
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.010632
+  Variance:           0.0353348
+  Minimum:            0.0786677
+  Maximum:            0.0729777
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of spatial effect of distH3
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00105618
+  Variance:           0.0479679
+  Minimum:            0
+  Maximum:            0
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: linear effects
+
+  Acceptance rate:    91.75 %
+
+  Relative Changes in  
+
+  Mean:               0.00693068
+  Variance:           0.036613
+  Minimum:            0.00886838
+  Maximum:            0.0490225
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Spatial effect (MRF) of distH5
+
+  Acceptance rate:    18.44 %
+
+  Relative Changes in  
+
+  Mean:               0.0134976
+  Variance:           0.0332391
+  Minimum:            0.0782235
+  Maximum:            0.0799292
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of spatial effect of distH5
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00189736
+  Variance:           0.0580441
+  Minimum:            0.0312671
+  Maximum:            0.0607597
+
+
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of cage
+
+  Acceptance rate:    95.78 %
+
+  Relative Changes in  
+
+  Mean:               0.00987419
+  Variance:           0.0250497
+  Minimum:            0.0559699
+  Maximum:            0.0811612
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of nonlinear effect of cage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0197523
+  Variance:           0.0340145
+  Minimum:            4.24953e-07
+  Maximum:            0.127255
+
+
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of medu
+
+  Acceptance rate:    92.47 %
+
+  Relative Changes in  
+
+  Mean:               0.00585983
+  Variance:           0.0910568
+  Minimum:            0.146723
+  Maximum:            0.306393
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of nonlinear effect of medu
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0241622
+  Variance:           0.153415
+  Minimum:            0.0646358
+  Maximum:            0.298499
+
+
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of breastfeeding
+
+  Acceptance rate:    96.44 %
+
+  Relative Changes in  
+
+  Mean:               0.00751406
+  Variance:           0.0152681
+  Minimum:            0.0670164
+  Maximum:            0.0812168
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of nonlinear effect of breastfeeding
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00753177
+  Variance:           0.0354481
+  Minimum:            0.638601
+  Maximum:            1.62659e-06
+
+
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mage
+
+  Acceptance rate:    95.72 %
+
+  Relative Changes in  
+
+  Mean:               0.0245853
+  Variance:           0.00907662
+  Minimum:            0.116692
+  Maximum:            0.0348638
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of nonlinear effect of mage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00879472
+  Variance:           0.0185768
+  Minimum:            0
+  Maximum:            0
+
+
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mbmi
+
+  Acceptance rate:    92.1 %
+
+  Relative Changes in  
+
+  Mean:               0.0161965
+  Variance:           0.0127929
+  Minimum:            0.0292425
+  Maximum:            0.0304142
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of nonlinear effect of mbmi
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0238154
+  Variance:           0.0667163
+  Minimum:            0
+  Maximum:            0
+
+
+
+  MAIN_sigma_REGRESSION_wasting2: linear effects
+
+  Acceptance rate:    90.86 %
+
+  Relative Changes in  
+
+  Mean:               0.0107508
+  Variance:           0.0131615
+  Minimum:            0.0670862
+  Maximum:            0.0661884
+
+
+
+  MAIN_sigma_REGRESSION_wasting2: Spatial effect (MRF) of distH7
+
+  Acceptance rate:    9.141 %
+
+  Relative Changes in  
+
+  Mean:               0.0134841
+  Variance:           0.0365774
+  Minimum:            0.0671866
+  Maximum:            0.0892386
+
+
+
+  MAIN_sigma_REGRESSION_wasting2: Variance of spatial effect of distH7
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00348201
+  Variance:           0.0315239
+  Minimum:            0.00022271
+  Maximum:            0.0235488
+
+
+
+  MAIN_sigma_REGRESSION_wasting2:  Nonlinear effect (P-spline) of cage
+
+  Acceptance rate:    95.91 %
+
+  Relative Changes in  
+
+  Mean:               0.00294542
+  Variance:           0.0316275
+  Minimum:            0.0119494
+  Maximum:            0.027784
+
+
+
+  MAIN_sigma_REGRESSION_wasting2: Variance of nonlinear effect of cage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00114917
+  Variance:           0.0253961
+  Minimum:            0
+  Maximum:            0
+
+
+
+  MAIN_sigma_REGRESSION_wasting2:  Nonlinear effect (P-spline) of mbmi
+
+  Acceptance rate:    90.52 %
+
+  Relative Changes in  
+
+  Mean:               0.0144438
+  Variance:           0.0234572
+  Minimum:            0.0757363
+  Maximum:            0.0563664
+
+
+
+  MAIN_sigma_REGRESSION_wasting2: Variance of nonlinear effect of mbmi
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00334288
+  Variance:           0.00659305
+  Minimum:            0
+  Maximum:            0
+
+
+
+  MAIN_rho_REGRESSION_stunting2: linear effects
+
+  Acceptance rate:    86.88 %
+
+  Relative Changes in  
+
+  Mean:               0.0103345
+  Variance:           0.0244825
+  Minimum:            0.0357406
+  Maximum:            0.0807289
+
+
+
+  MAIN_rho_REGRESSION_stunting2:  Nonlinear effect (P-spline) of cage
+
+  Acceptance rate:    96.49 %
+
+  Relative Changes in  
+
+  Mean:               0.00302236
+  Variance:           0.0438708
+  Minimum:            0.0253976
+  Maximum:            0.0337584
+
+
+
+  MAIN_rho_REGRESSION_stunting2: Variance of nonlinear effect of cage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0139119
+  Variance:           0.0786857
+  Minimum:            0.383345
+  Maximum:            0.260296
+
+
+
+  MAIN_rho_REGRESSION_stunting2: Spatial effect (MRF) of distH9
+
+  Acceptance rate:    35.51 %
+
+  Relative Changes in  
+
+  Mean:               0.021141
+  Variance:           0.0335838
+  Minimum:            0.0745871
+  Maximum:            0.0770369
+
+
+
+  MAIN_rho_REGRESSION_stunting2: Variance of spatial effect of distH9
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.00644399
+  Variance:           0.000847759
+  Minimum:            0.0187174
+  Maximum:            2.37953e-05
+
+
+
+  MAIN_rho_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mage
+
+  Acceptance rate:    93.53 %
+
+  Relative Changes in  
+
+  Mean:               0.0159905
+  Variance:           0.0447937
+  Minimum:            0.0591411
+  Maximum:            0.00377327
+
+
+
+  MAIN_rho_REGRESSION_stunting2: Variance of nonlinear effect of mage
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0391541
+  Variance:           0.2135
+  Minimum:            0.514553
+  Maximum:            0.516118
+
+
+
+  MAIN_rho_REGRESSION_stunting2:  Nonlinear effect (P-spline) of breastfeeding
+
+  Acceptance rate:    95.39 %
+
+  Relative Changes in  
+
+  Mean:               0.0149134
+  Variance:           0.0313238
+  Minimum:            0.0923625
+  Maximum:            0.0438161
+
+
+
+  MAIN_rho_REGRESSION_stunting2: Variance of nonlinear effect of breastfeeding
+
+  Acceptance rate:    100 %
+
+  Relative Changes in  
+
+  Mean:               0.0102596
+  Variance:           0.0111784
+  Minimum:            0
+  Maximum:            0
+
+
+  ITERATION: 52000
+
+SIMULATION TERMINATED
+
+SIMULATION RUN TIME: 74 minutes 39 seconds
+
+
+ESTIMATION RESULTS:
+
+
+MCMCREG OBJECT yreg: MAIN mu REGRESSION_stunting2
+
+
+
+  MAIN_mu_REGRESSION_stunting2: linear effects
+
+
+    Variable        mean           Std. Dev.      2.5% quant.    median         97.5% quant.   
+    const           -1.58507       0.0611736      -1.70871       -1.5826        -1.46535       
+    csex            -0.0157602     0.0174649      -0.0505541     -0.0156741     0.0207415      
+    ctwin           -0.742403      0.090086       -0.926221      -0.74267       -0.570304      
+    munemployed     -0.0435272     0.020582       -0.0822167     -0.0442493     -0.00336904    
+    motorcycle      0.102503       0.0312476      0.0423398      0.103121       0.163132       
+    mreligion2      -0.056982      0.0298161      -0.113821      -0.0575177     -0.000405037   
+    mreligion3      0.147775       0.0474372      0.0533683      0.149077       0.238646       
+    mreligion4      0.134517       0.0724909      -0.0168003     0.138454       0.277807       
+    mreligion5      0.0917045      0.057066       -0.01809       0.0890119      0.198288       
+    electricity     0.103292       0.0252274      0.0527602      0.103604       0.153119       
+    radio           0.0406185      0.0196036      0.000872813    0.0406747      0.0781368      
+    television      0.14991        0.0243459      0.102934       0.149637       0.196001       
+    refrigerator    0.104503       0.0351557      0.0320763      0.104767       0.17589        
+    bicycle         -0.0264237     0.0203243      -0.0661642     -0.0278009     0.0151832      
+    car             0.0272771      0.0695124      -0.113326      0.028089       0.160703       
+
+    Acceptance rate:    100 %
+
+    Results for fixed effects are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_LinearEffects.res
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of cage
+
+    Acceptance rate:    100 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_nonlinear_pspline_effect_of_cage_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_nonlinear_pspline_effect_of_cage.res
+
+    Mean effects evaluated at cage=17 with value -0.36854358147863
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 2.04933
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.56173
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of cage
+
+    Acceptance rate:    100 %
+
+    Mean:           0.0839204
+    Std. dev.:      0.0474356
+    2.5% Quantile:  0.0254362
+    10% Quantile:   0.0387507
+    50% Quantile:   0.0726616
+    90% Quantile:   0.141858
+    97.5% Quantile: 0.207519
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_cage.res
+
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of breastfeeding
+
+    Acceptance rate:    100 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_nonlinear_pspline_effect_of_breastfeeding_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_nonlinear_pspline_effect_of_breastfeeding.res
+
+    Mean effects evaluated at breastfeeding=14 with value 0.07608892648955
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 1.94651
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.54901
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of breastfeeding
+
+    Acceptance rate:    100 %
+
+    Mean:           0.00199034
+    Std. dev.:      0.00218803
+    2.5% Quantile:  0.000310261
+    10% Quantile:   0.000504662
+    50% Quantile:   0.00124684
+    90% Quantile:   0.00393263
+    97.5% Quantile: 0.00848737
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_breastfeeding.res
+
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mbmi
+
+    Acceptance rate:    100 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_nonlinear_pspline_effect_of_mbmi_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_nonlinear_pspline_effect_of_mbmi.res
+
+    Mean effects evaluated at mbmi=19.78 with value -0.0652181756314449
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 1.93869
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.61738
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of mbmi
+
+    Acceptance rate:    100 %
+
+    Mean:           0.00223287
+    Std. dev.:      0.00264173
+    2.5% Quantile:  0.000275939
+    10% Quantile:   0.000481977
+    50% Quantile:   0.00138806
+    90% Quantile:   0.00483411
+    97.5% Quantile: 0.00943295
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_mbmi.res
+
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mage
+
+    Acceptance rate:    100 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_nonlinear_pspline_effect_of_mage_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_nonlinear_pspline_effect_of_mage.res
+
+    Mean effects evaluated at mage=25 with value 0.0415171548128171
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 1.73933
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.46069
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of mage
+
+    Acceptance rate:    100 %
+
+    Mean:           0.00195325
+    Std. dev.:      0.00217377
+    2.5% Quantile:  0.000291245
+    10% Quantile:   0.000462047
+    50% Quantile:   0.0012764
+    90% Quantile:   0.00408719
+    97.5% Quantile: 0.00743799
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_mage.res
+
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of medu
+
+    Acceptance rate:    100 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_nonlinear_pspline_effect_of_medu_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_nonlinear_pspline_effect_of_medu.res
+
+    Mean effects evaluated at medu=4 with value -0.192324655812683
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 1.72522
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.44191
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of medu
+
+    Acceptance rate:    100 %
+
+    Mean:           0.0013984
+    Std. dev.:      0.00184067
+    2.5% Quantile:  0.000230913
+    10% Quantile:   0.000345787
+    50% Quantile:   0.000862492
+    90% Quantile:   0.00273863
+    97.5% Quantile: 0.00592563
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_medu.res
+
+
+
+  MAIN_mu_REGRESSION_stunting2:  Nonlinear effect (P-spline) of edupartner
+
+    Acceptance rate:    100 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_nonlinear_pspline_effect_of_edupartner_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_nonlinear_pspline_effect_of_edupartner.res
+
+    Mean effects evaluated at edupartner=7 with value -0.0980304723081407
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 1.69467
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.37316
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of nonlinear effect of edupartner
+
+    Acceptance rate:    100 %
+
+    Mean:           0.00127409
+    Std. dev.:      0.00150789
+    2.5% Quantile:  0.000218719
+    10% Quantile:   0.000321543
+    50% Quantile:   0.000846318
+    90% Quantile:   0.00262861
+    97.5% Quantile: 0.00502865
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_edupartner.res
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Spatial effect (MRF) of distH
+
+    Acceptance rate:    100 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_spatial_MRF_effect_of_distH_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_spatial_MRF_effect_of_distH.res
+
+    Mean effects evaluated at distH=78 with value -0.207274380118323
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 2.77301
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 2.0176
+
+
+
+  MAIN_mu_REGRESSION_stunting2: Variance of spatial effect of distH
+
+    Acceptance rate:    100 %
+
+    Mean:           0.150683
+    Std. dev.:      0.0221475
+    2.5% Quantile:  0.11152
+    10% Quantile:   0.122826
+    50% Quantile:   0.149233
+    90% Quantile:   0.180568
+    97.5% Quantile: 0.1971
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_variance_of_spatial_MRF_effect_of_distH.res
+
+
+  PREDICTED VALUES: 
+
+    Results for the predictor, mean are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_predict.res
+
+
+  ESTIMATION RESULT FOR THE DEVIANCE: 
+
+    Mean:           156447.39
+    Std. Dev:       72.837491
+    2p5% Quantile:  156308.31
+    10% Quantile:   156353.45
+    50% Quantile:   156448.54
+    90% Quantile:   156544.42
+    97p5% Quantile: 156594.36
+
+
+    Results for the DIC are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_predict_DIC.res
+
+  ESTIMATION RESULTS FOR THE DIC: 
+
+    Deviance(bar_mu):           155174.12
+    pD:                         1273.2758
+    DIC:                        157720.67
+
+
+
+MCMCREG OBJECT yreg: MAIN mu REGRESSION_wasting2
+
+
+
+  MAIN_mu_REGRESSION_wasting2: linear effects
+
+
+    Variable        mean           Std. Dev.      2.5% quant.    median         97.5% quant.   
+    const           -0.761465      0.0477359      -0.856434      -0.760333      -0.668771      
+    csex            0.021298       0.0133791      -0.00415644    0.0211012      0.047535       
+    ctwin           -0.0905346     0.0780339      -0.238         -0.0923403     0.0647413      
+    munemployed     -0.0328337     0.0164701      -0.0644354     -0.0332006     -0.000873694   
+    motorcycle      0.022212       0.0255118      -0.0283154     0.0219408      0.0735583      
+    mreligion2      0.00178809     0.0227418      -0.0444004     0.0016063      0.0459862      
+    mreligion3      0.0290025      0.0415221      -0.0517446     0.0282007      0.110017       
+    mreligion4      0.0663531      0.0590287      -0.0464697     0.0641803      0.179371       
+    mreligion5      0.00835742     0.0473678      -0.0839998     0.00858253     0.0993664      
+    electricity     0.0234236      0.0185508      -0.0104495     0.0231662      0.0608015      
+    radio           0.00342233     0.0148746      -0.0248042     0.00306268     0.033757       
+    television      -0.000678424   0.0171381      -0.0361763     -0.00039391    0.033629       
+    refrigerator    0.0491179      0.0283855      -0.00787845    0.0481903      0.10619        
+    bicycle         0.0341505      0.0148242      0.00288552     0.0341736      0.0627725      
+    car             0.0411896      0.0536806      -0.0609893     0.0416311      0.143699       
+
+    Acceptance rate:    100 %
+
+    Results for fixed effects are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_LinearEffects.res
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of cage
+
+    Acceptance rate:    100 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_nonlinear_pspline_effect_of_cage_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_nonlinear_pspline_effect_of_cage.res
+
+    Mean effects evaluated at cage=17 with value -0.235075637473264
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 2.02052
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.57046
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of cage
+
+    Acceptance rate:    100 %
+
+    Mean:           0.0104264
+    Std. dev.:      0.00741202
+    2.5% Quantile:  0.00245628
+    10% Quantile:   0.00392221
+    50% Quantile:   0.0084595
+    90% Quantile:   0.0193631
+    97.5% Quantile: 0.0296003
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_variance_of_nonlinear_pspline_effect_of_cage.res
+
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of breastfeeding
+
+    Acceptance rate:    100 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_nonlinear_pspline_effect_of_breastfeeding_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_nonlinear_pspline_effect_of_breastfeeding.res
+
+    Mean effects evaluated at breastfeeding=14 with value 0.0263058221373298
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 1.89604
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.57327
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of breastfeeding
+
+    Acceptance rate:    100 %
+
+    Mean:           0.000991674
+    Std. dev.:      0.00102726
+    2.5% Quantile:  0.000220907
+    10% Quantile:   0.000311887
+    50% Quantile:   0.000687435
+    90% Quantile:   0.00189231
+    97.5% Quantile: 0.00339
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_variance_of_nonlinear_pspline_effect_of_breastfeeding.res
+
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of mbmi
+
+    Acceptance rate:    100 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_nonlinear_pspline_effect_of_mbmi_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_nonlinear_pspline_effect_of_mbmi.res
+
+    Mean effects evaluated at mbmi=19.78 with value -0.0210296792030854
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 1.96663
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.60981
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of mbmi
+
+    Acceptance rate:    100 %
+
+    Mean:           0.00348101
+    Std. dev.:      0.00380128
+    2.5% Quantile:  0.000587507
+    10% Quantile:   0.000899645
+    50% Quantile:   0.00235615
+    90% Quantile:   0.00703306
+    97.5% Quantile: 0.0149309
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_variance_of_nonlinear_pspline_effect_of_mbmi.res
+
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of mage
+
+    Acceptance rate:    100 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_nonlinear_pspline_effect_of_mage_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_nonlinear_pspline_effect_of_mage.res
+
+    Mean effects evaluated at mage=25 with value 0.0420713806450962
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 1.76466
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.49006
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of mage
+
+    Acceptance rate:    100 %
+
+    Mean:           0.00195101
+    Std. dev.:      0.00249729
+    2.5% Quantile:  0.000287782
+    10% Quantile:   0.000428271
+    50% Quantile:   0.00123912
+    90% Quantile:   0.00378713
+    97.5% Quantile: 0.00883459
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_variance_of_nonlinear_pspline_effect_of_mage.res
+
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of medu
+
+    Acceptance rate:    100 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_nonlinear_pspline_effect_of_medu_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_nonlinear_pspline_effect_of_medu.res
+
+    Mean effects evaluated at medu=4 with value -0.082655485463966
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 1.68053
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.45128
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of medu
+
+    Acceptance rate:    100 %
+
+    Mean:           0.00127792
+    Std. dev.:      0.00143376
+    2.5% Quantile:  0.00024536
+    10% Quantile:   0.000361073
+    50% Quantile:   0.000856068
+    90% Quantile:   0.00253024
+    97.5% Quantile: 0.00506802
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_variance_of_nonlinear_pspline_effect_of_medu.res
+
+
+
+  MAIN_mu_REGRESSION_wasting2:  Nonlinear effect (P-spline) of edupartner
+
+    Acceptance rate:    100 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_nonlinear_pspline_effect_of_edupartner_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_nonlinear_pspline_effect_of_edupartner.res
+
+    Mean effects evaluated at edupartner=7 with value -0.0269508975324273
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 1.6638
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.46796
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of nonlinear effect of edupartner
+
+    Acceptance rate:    100 %
+
+    Mean:           0.00126176
+    Std. dev.:      0.00204731
+    2.5% Quantile:  0.000222595
+    10% Quantile:   0.000327889
+    50% Quantile:   0.000765025
+    90% Quantile:   0.00235837
+    97.5% Quantile: 0.00472864
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_variance_of_nonlinear_pspline_effect_of_edupartner.res
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Spatial effect (MRF) of distH3
+
+    Acceptance rate:    100 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_spatial_MRF_effect_of_distH3_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_spatial_MRF_effect_of_distH3.res
+
+    Mean effects evaluated at distH3=78 with value 0.0441989675172941
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 2.79339
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 2.02641
+
+
+
+  MAIN_mu_REGRESSION_wasting2: Variance of spatial effect of distH3
+
+    Acceptance rate:    100 %
+
+    Mean:           0.145306
+    Std. dev.:      0.0186451
+    2.5% Quantile:  0.112732
+    10% Quantile:   0.122095
+    50% Quantile:   0.144105
+    90% Quantile:   0.170245
+    97.5% Quantile: 0.1846
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_variance_of_spatial_MRF_effect_of_distH3.res
+
+
+
+MCMCREG OBJECT yreg: MAIN sigma REGRESSION_stunting2
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: linear effects
+
+
+    Variable        mean           Std. Dev.      2.5% quant.    median         97.5% quant.   
+    const           0.356821       0.0315664      0.298714       0.355717       0.423403       
+    csex            0.0110453      0.00959642     -0.00842591    0.0111104      0.030942       
+    ctwin           0.00136574     0.0493919      -0.08961       0.00111041     0.10836        
+    munemployed     0.0197589      0.0112792      -0.00249605    0.0198931      0.0414292      
+    motorcycle      -0.00270154    0.0177841      -0.0389713     -0.00249627    0.033506       
+    mreligion2      0.0227227      0.0154269      -0.00745904    0.0227611      0.0528531      
+    mreligion3      -0.0361855     0.0273804      -0.0895622     -0.0374679     0.0163384      
+    mreligion4      0.0473014      0.04167        -0.0354125     0.0480394      0.128874       
+    mreligion5      -0.102723      0.0356046      -0.171419      -0.10439       -0.0329969     
+    electricity     -0.0261652     0.0127565      -0.0505155     -0.0260841     -7.27053e-05   
+    radio           -0.00407453    0.0109791      -0.0254007     -0.00410845    0.0176373      
+    television      0.0128514      0.0132521      -0.0134246     0.0131017      0.0381473      
+    refrigerator    -0.006054      0.0193275      -0.0427546     -0.00643177    0.032436       
+    bicycle         -0.0118943     0.011062       -0.0328104     -0.0121812     0.0112899      
+    car             0.0552073      0.0371968      -0.0212045     0.0565112      0.126043       
+
+    Acceptance rate:    91.75 %
+
+    Results for fixed effects are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_LinearEffects.res
+
+
+  MAIN_sigma_REGRESSION_stunting2: Spatial effect (MRF) of distH5
+
+    Acceptance rate:    18.43 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_spatial_MRF_effect_of_distH5_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_spatial_MRF_effect_of_distH5.res
+
+    Mean effects evaluated at distH5=78 with value 0.104826781000713
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 2.78995
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.99299
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of spatial effect of distH5
+
+    Acceptance rate:    100 %
+
+    Mean:           0.0569847
+    Std. dev.:      0.00768157
+    2.5% Quantile:  0.0428195
+    10% Quantile:   0.0475989
+    50% Quantile:   0.0565752
+    90% Quantile:   0.0674538
+    97.5% Quantile: 0.0733309
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_variance_of_spatial_MRF_effect_of_distH5.res
+
+
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of cage
+
+    Acceptance rate:    95.78 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_nonlinear_pspline_effect_of_cage_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_nonlinear_pspline_effect_of_cage.res
+
+    Mean effects evaluated at cage=17 with value 0.0205285708526741
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 1.99275
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.56942
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of nonlinear effect of cage
+
+    Acceptance rate:    100 %
+
+    Mean:           0.00240846
+    Std. dev.:      0.0023452
+    2.5% Quantile:  0.000356439
+    10% Quantile:   0.000570724
+    50% Quantile:   0.00173185
+    90% Quantile:   0.00478874
+    97.5% Quantile: 0.00871115
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_cage.res
+
+
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of medu
+
+    Acceptance rate:    92.47 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_nonlinear_pspline_effect_of_medu_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_nonlinear_pspline_effect_of_medu.res
+
+    Mean effects evaluated at medu=4 with value 0.00901368449434429
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 1.74033
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.44417
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of nonlinear effect of medu
+
+    Acceptance rate:    100 %
+
+    Mean:           0.00163603
+    Std. dev.:      0.00161184
+    2.5% Quantile:  0.000258787
+    10% Quantile:   0.000420705
+    50% Quantile:   0.00112972
+    90% Quantile:   0.00324443
+    97.5% Quantile: 0.00641323
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_medu.res
+
+
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of breastfeeding
+
+    Acceptance rate:    96.44 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_nonlinear_pspline_effect_of_breastfeeding_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_nonlinear_pspline_effect_of_breastfeeding.res
+
+    Mean effects evaluated at breastfeeding=14 with value -0.0204289935380022
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 1.91257
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.52483
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of nonlinear effect of breastfeeding
+
+    Acceptance rate:    100 %
+
+    Mean:           0.000917177
+    Std. dev.:      0.00116779
+    2.5% Quantile:  0.000208483
+    10% Quantile:   0.00030162
+    50% Quantile:   0.000667958
+    90% Quantile:   0.00171216
+    97.5% Quantile: 0.00307843
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_breastfeeding.res
+
+
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mage
+
+    Acceptance rate:    95.72 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_nonlinear_pspline_effect_of_mage_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_nonlinear_pspline_effect_of_mage.res
+
+    Mean effects evaluated at mage=25 with value -0.0155829211720122
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 1.76106
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.49499
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of nonlinear effect of mage
+
+    Acceptance rate:    100 %
+
+    Mean:           0.00093925
+    Std. dev.:      0.000870594
+    2.5% Quantile:  0.000204696
+    10% Quantile:   0.000292365
+    50% Quantile:   0.000693554
+    90% Quantile:   0.00194623
+    97.5% Quantile: 0.00324043
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_mage.res
+
+
+
+  MAIN_sigma_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mbmi
+
+    Acceptance rate:    92.1 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_nonlinear_pspline_effect_of_mbmi_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_nonlinear_pspline_effect_of_mbmi.res
+
+    Mean effects evaluated at mbmi=19.78 with value -0.0150095298178069
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 1.91949
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.55366
+
+
+
+  MAIN_sigma_REGRESSION_stunting2: Variance of nonlinear effect of mbmi
+
+    Acceptance rate:    100 %
+
+    Mean:           0.00172033
+    Std. dev.:      0.00155603
+    2.5% Quantile:  0.00033541
+    10% Quantile:   0.000505827
+    50% Quantile:   0.00129193
+    90% Quantile:   0.00332836
+    97.5% Quantile: 0.00611639
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_mbmi.res
+
+
+
+MCMCREG OBJECT yreg: MAIN sigma REGRESSION_wasting2
+
+
+
+  MAIN_sigma_REGRESSION_wasting2: linear effects
+
+
+    Variable        mean           Std. Dev.      2.5% quant.    median         97.5% quant.   
+    const           0.098592       0.0157078      0.0676601      0.0984942      0.130801       
+    csex            0.00553554     0.00939718     -0.0125627     0.00556027     0.0254149      
+    ctwin           0.0928521      0.0502371      -0.003499      0.0938273      0.195612       
+    munemployed     0.00698027     0.0114874      -0.0152835     0.00685429     0.0295214      
+    motorcycle      0.033787       0.0171419      0.00129139     0.0332395      0.0676284      
+    mreligion2      0.000963341    0.0163534      -0.0302016     0.000932918    0.0317361      
+    mreligion3      0.0100581      0.0280567      -0.0436273     0.00996996     0.06632        
+    mreligion4      -0.00315032    0.0453075      -0.0913493     -0.0035647     0.0855143      
+    mreligion5      -0.0656605     0.0363385      -0.133266      -0.0660183     0.00812072     
+    electricity     -0.0167234     0.0136821      -0.0439719     -0.0166001     0.0101378      
+    radio           0.0103216      0.0108329      -0.0104603     0.00982991     0.0312314      
+    television      -0.0191179     0.0129778      -0.0445577     -0.0186995     0.00528219     
+    refrigerator    0.000682752    0.0190447      -0.0385044     0.000260248    0.0371874      
+    bicycle         -0.0059519     0.0112722      -0.0289139     -0.00598975    0.0155026      
+    car             0.0133134      0.0375577      -0.05613       0.012942       0.086928       
+
+    Acceptance rate:    90.86 %
+
+    Results for fixed effects are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_wasting2_LinearEffects.res
+
+
+  MAIN_sigma_REGRESSION_wasting2: Spatial effect (MRF) of distH7
+
+    Acceptance rate:    9.14 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_wasting2_spatial_MRF_effect_of_distH7_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_wasting2_spatial_MRF_effect_of_distH7.res
+
+    Mean effects evaluated at distH7=78 with value 0.129611820822296
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 2.75931
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.99417
+
+
+
+  MAIN_sigma_REGRESSION_wasting2: Variance of spatial effect of distH7
+
+    Acceptance rate:    100 %
+
+    Mean:           0.100433
+    Std. dev.:      0.0112866
+    2.5% Quantile:  0.0798161
+    10% Quantile:   0.086467
+    50% Quantile:   0.0995587
+    90% Quantile:   0.114922
+    97.5% Quantile: 0.124236
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_wasting2_variance_of_spatial_MRF_effect_of_distH7.res
+
+
+
+  MAIN_sigma_REGRESSION_wasting2:  Nonlinear effect (P-spline) of cage
+
+    Acceptance rate:    95.91 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_wasting2_nonlinear_pspline_effect_of_cage_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_wasting2_nonlinear_pspline_effect_of_cage.res
+
+    Mean effects evaluated at cage=17 with value 0.0744199433648296
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 2.01727
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.60629
+
+
+
+  MAIN_sigma_REGRESSION_wasting2: Variance of nonlinear effect of cage
+
+    Acceptance rate:    100 %
+
+    Mean:           0.00174386
+    Std. dev.:      0.00131271
+    2.5% Quantile:  0.00043988
+    10% Quantile:   0.00063687
+    50% Quantile:   0.00138738
+    90% Quantile:   0.00334427
+    97.5% Quantile: 0.0051825
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_wasting2_variance_of_nonlinear_pspline_effect_of_cage.res
+
+
+
+  MAIN_sigma_REGRESSION_wasting2:  Nonlinear effect (P-spline) of mbmi
+
+    Acceptance rate:    90.52 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_wasting2_nonlinear_pspline_effect_of_mbmi_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_wasting2_nonlinear_pspline_effect_of_mbmi.res
+
+    Mean effects evaluated at mbmi=19.78 with value -0.00418201875879402
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 1.94911
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.56185
+
+
+
+  MAIN_sigma_REGRESSION_wasting2: Variance of nonlinear effect of mbmi
+
+    Acceptance rate:    100 %
+
+    Mean:           0.00335563
+    Std. dev.:      0.0030978
+    2.5% Quantile:  0.000684228
+    10% Quantile:   0.00103176
+    50% Quantile:   0.00247632
+    90% Quantile:   0.00668138
+    97.5% Quantile: 0.0113296
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_wasting2_variance_of_nonlinear_pspline_effect_of_mbmi.res
+
+
+
+MCMCREG OBJECT yreg: MAIN rho REGRESSION_stunting2
+
+
+
+  MAIN_rho_REGRESSION_stunting2: linear effects
+
+
+    Variable        mean           Std. Dev.      2.5% quant.    median         97.5% quant.   
+    const           -0.214062      0.0351667      -0.286422      -0.213697      -0.147311      
+    csex            0.00911866     0.0135347      -0.0163671     0.00869622     0.0360611      
+    ctwin           0.0573778      0.0690014      -0.0807914     0.0589902      0.189824       
+    munemployed     -0.0526429     0.0161764      -0.0848447     -0.0538249     -0.0206737     
+    motorcycle      -0.021806      0.025907       -0.0731485     -0.0221443     0.0278952      
+    mreligion2      -0.0195017     0.022525       -0.0646107     -0.0193645     0.0260896      
+    mreligion3      0.00577737     0.0381387      -0.0673279     0.00565564     0.0798013      
+    mreligion4      0.00267582     0.0565621      -0.106397      0.002329       0.118452       
+    mreligion5      0.0601996      0.0487119      -0.0375196     0.0597595      0.153432       
+    electricity     0.0121149      0.0188659      -0.0246887     0.011487       0.0499366      
+    radio           -0.00544851    0.01582        -0.0360904     -0.00564726    0.0243033      
+    television      -0.00776807    0.0190438      -0.0455758     -0.00810083    0.0279812      
+    refrigerator    0.0530662      0.0270297      0.0011005      0.0533459      0.103067       
+    bicycle         0.00246936     0.0156028      -0.0285911     0.00228503     0.0336385      
+    car             0.0549141      0.0536213      -0.0480375     0.0539902      0.162663       
+
+    Acceptance rate:    86.88 %
+
+    Results for fixed effects are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_LinearEffects.res
+
+
+  MAIN_rho_REGRESSION_stunting2:  Nonlinear effect (P-spline) of cage
+
+    Acceptance rate:    96.49 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_nonlinear_pspline_effect_of_cage_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_nonlinear_pspline_effect_of_cage.res
+
+    Mean effects evaluated at cage=17 with value 0.0778057452634873
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 1.86508
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.57351
+
+
+
+  MAIN_rho_REGRESSION_stunting2: Variance of nonlinear effect of cage
+
+    Acceptance rate:    100 %
+
+    Mean:           0.000939016
+    Std. dev.:      0.000808421
+    2.5% Quantile:  0.000242236
+    10% Quantile:   0.000318279
+    50% Quantile:   0.000707882
+    90% Quantile:   0.00176789
+    97.5% Quantile: 0.0028013
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_cage.res
+
+
+
+  MAIN_rho_REGRESSION_stunting2: Spatial effect (MRF) of distH9
+
+    Acceptance rate:    35.51 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_spatial_MRF_effect_of_distH9_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_spatial_MRF_effect_of_distH9.res
+
+    Mean effects evaluated at distH9=78 with value -0.0947794832253899
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 2.80542
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 2.03571
+
+
+
+  MAIN_rho_REGRESSION_stunting2: Variance of spatial effect of distH9
+
+    Acceptance rate:    100 %
+
+    Mean:           0.0363486
+    Std. dev.:      0.00827751
+    2.5% Quantile:  0.0223607
+    10% Quantile:   0.0261029
+    50% Quantile:   0.0357152
+    90% Quantile:   0.04679
+    97.5% Quantile: 0.0540462
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_variance_of_spatial_MRF_effect_of_distH9.res
+
+
+
+  MAIN_rho_REGRESSION_stunting2:  Nonlinear effect (P-spline) of mage
+
+    Acceptance rate:    93.53 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_nonlinear_pspline_effect_of_mage_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_nonlinear_pspline_effect_of_mage.res
+
+    Mean effects evaluated at mage=25 with value 0.00635397987536429
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 1.73091
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.41335
+
+
+
+  MAIN_rho_REGRESSION_stunting2: Variance of nonlinear effect of mage
+
+    Acceptance rate:    100 %
+
+    Mean:           0.00245159
+    Std. dev.:      0.00275119
+    2.5% Quantile:  0.000362555
+    10% Quantile:   0.000599159
+    50% Quantile:   0.00152805
+    90% Quantile:   0.00545004
+    97.5% Quantile: 0.010093
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_mage.res
+
+
+
+  MAIN_rho_REGRESSION_stunting2:  Nonlinear effect (P-spline) of breastfeeding
+
+    Acceptance rate:    95.38 %
+
+    Estimated parameters are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_nonlinear_pspline_effect_of_breastfeeding_param.res
+
+    Function estimates are stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_nonlinear_pspline_effect_of_breastfeeding.res
+
+    Mean effects evaluated at breastfeeding=14 with value -0.0277233338148391
+
+    Scaling factor to blow up pointwise 95 percent credible intervals
+    to obtain simultaneous credible intervals: 1.91507
+
+    Scaling factor to blow up pointwise 80 percent credible intervals
+    to obtain simultaneous credible intervals: 1.55883
+
+
+
+  MAIN_rho_REGRESSION_stunting2: Variance of nonlinear effect of breastfeeding
+
+    Acceptance rate:    100 %
+
+    Mean:           0.00196759
+    Std. dev.:      0.00190029
+    2.5% Quantile:  0.000336109
+    10% Quantile:   0.000574804
+    50% Quantile:   0.00144114
+    90% Quantile:   0.00380818
+    97.5% Quantile: 0.00730273
+
+    Results for the variance component are also stored in file
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_breastfeeding.res
+
+
+  FILES FOR VISUALIZING RESULTS:
+
+    STATA DO-FILE
+
+    /Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_stata.do
+> yreg.getsample
+Storing sampled parameters...
+Sampled parameters are stored in file(s):
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_LinearEffects_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_nonlinear_pspline_effect_of_cage_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_cage_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_spatial_MRF_effect_of_distH9_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_variance_of_spatial_MRF_effect_of_distH9_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_nonlinear_pspline_effect_of_mage_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_mage_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_nonlinear_pspline_effect_of_breastfeeding_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_breastfeeding_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_wasting2_LinearEffects_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_wasting2_spatial_MRF_effect_of_distH7_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_wasting2_variance_of_spatial_MRF_effect_of_distH7_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_wasting2_nonlinear_pspline_effect_of_cage_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_wasting2_variance_of_nonlinear_pspline_effect_of_cage_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_wasting2_nonlinear_pspline_effect_of_mbmi_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_wasting2_variance_of_nonlinear_pspline_effect_of_mbmi_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_LinearEffects_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_spatial_MRF_effect_of_distH5_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_variance_of_spatial_MRF_effect_of_distH5_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_nonlinear_pspline_effect_of_cage_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_cage_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_nonlinear_pspline_effect_of_medu_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_medu_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_nonlinear_pspline_effect_of_breastfeeding_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_breastfeeding_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_nonlinear_pspline_effect_of_mage_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_mage_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_nonlinear_pspline_effect_of_mbmi_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_sigma_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_mbmi_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_LinearEffects_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_nonlinear_pspline_effect_of_cage_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_variance_of_nonlinear_pspline_effect_of_cage_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_nonlinear_pspline_effect_of_breastfeeding_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_variance_of_nonlinear_pspline_effect_of_breastfeeding_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_nonlinear_pspline_effect_of_mbmi_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_variance_of_nonlinear_pspline_effect_of_mbmi_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_nonlinear_pspline_effect_of_mage_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_variance_of_nonlinear_pspline_effect_of_mage_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_nonlinear_pspline_effect_of_medu_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_variance_of_nonlinear_pspline_effect_of_medu_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_nonlinear_pspline_effect_of_edupartner_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_variance_of_nonlinear_pspline_effect_of_edupartner_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_spatial_MRF_effect_of_distH3_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_wasting2_variance_of_spatial_MRF_effect_of_distH3_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_LinearEffects_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_nonlinear_pspline_effect_of_cage_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_cage_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_nonlinear_pspline_effect_of_breastfeeding_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_breastfeeding_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_nonlinear_pspline_effect_of_mbmi_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_mbmi_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_nonlinear_pspline_effect_of_mage_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_mage_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_nonlinear_pspline_effect_of_medu_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_medu_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_nonlinear_pspline_effect_of_edupartner_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_edupartner_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_spatial_MRF_effect_of_distH_sample.raw
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_variance_of_spatial_MRF_effect_of_distH_sample.raw
+
+File for convenient visualization of 
+sampling paths using the Windows version of BayesX is stored in
+
+/Users/aleksandarspasojevic/Desktop/template_bivariate/results/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_samples.prg
+
+
+> drop d
+> drop yreg
+> logclose

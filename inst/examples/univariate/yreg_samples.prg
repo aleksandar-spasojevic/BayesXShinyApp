@@ -1,0 +1,28 @@
+% usefile /Users/aleksandarspasojevic/Desktop/BayesXShiny_test/output/yreg_samples.prg
+
+dataset _d
+graph _g
+
+_d.infile using /Users/aleksandarspasojevic/Desktop/BayesXShiny_test/output/yreg_MAIN_p_REGRESSION_y_LinearEffects_sample.raw
+_g.plotsample , outfile=/Users/aleksandarspasojevic/Desktop/BayesXShiny_test/output/yreg_MAIN_p_REGRESSION_y_LinearEffects_sample.ps using _d
+
+_d.infile using /Users/aleksandarspasojevic/Desktop/BayesXShiny_test/output/yreg_MAIN_b_REGRESSION_y_LinearEffects_sample.raw
+_g.plotsample , outfile=/Users/aleksandarspasojevic/Desktop/BayesXShiny_test/output/yreg_MAIN_b_REGRESSION_y_LinearEffects_sample.ps using _d
+
+_d.infile using /Users/aleksandarspasojevic/Desktop/BayesXShiny_test/output/yreg_MAIN_b_REGRESSION_y_nonlinear_pspline_effect_of_x2_sample.raw
+_g.plotsample , outfile=/Users/aleksandarspasojevic/Desktop/BayesXShiny_test/output/yreg_MAIN_b_REGRESSION_y_nonlinear_pspline_effect_of_x2_sample.ps using _d
+
+_d.infile using /Users/aleksandarspasojevic/Desktop/BayesXShiny_test/output/yreg_MAIN_b_REGRESSION_y_variance_of_nonlinear_pspline_effect_of_x2_sample.raw
+_g.plotsample , outfile=/Users/aleksandarspasojevic/Desktop/BayesXShiny_test/output/yreg_MAIN_b_REGRESSION_y_variance_of_nonlinear_pspline_effect_of_x2_sample.ps using _d
+
+_d.infile using /Users/aleksandarspasojevic/Desktop/BayesXShiny_test/output/yreg_MAIN_a_REGRESSION_y_LinearEffects_sample.raw
+_g.plotsample , outfile=/Users/aleksandarspasojevic/Desktop/BayesXShiny_test/output/yreg_MAIN_a_REGRESSION_y_LinearEffects_sample.ps using _d
+
+_d.infile using /Users/aleksandarspasojevic/Desktop/BayesXShiny_test/output/yreg_MAIN_a_REGRESSION_y_nonlinear_pspline_effect_of_x2_sample.raw
+_g.plotsample , outfile=/Users/aleksandarspasojevic/Desktop/BayesXShiny_test/output/yreg_MAIN_a_REGRESSION_y_nonlinear_pspline_effect_of_x2_sample.ps using _d
+
+_d.infile using /Users/aleksandarspasojevic/Desktop/BayesXShiny_test/output/yreg_MAIN_a_REGRESSION_y_variance_of_nonlinear_pspline_effect_of_x2_sample.raw
+_g.plotsample , outfile=/Users/aleksandarspasojevic/Desktop/BayesXShiny_test/output/yreg_MAIN_a_REGRESSION_y_variance_of_nonlinear_pspline_effect_of_x2_sample.ps using _d
+
+drop _d _g
+

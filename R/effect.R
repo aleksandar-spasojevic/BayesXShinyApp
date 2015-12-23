@@ -1,25 +1,17 @@
-#' @export
-linear <- function(effect, ...) UseMethod("linear")
 
-#' @export
+linear <- function(effect, ...) UseMethod("linear")
 linear.effect <- function(effect, ...){
   return( grepl("^linear", effect[["filetype"]]) )
 }
 
 
-#' @export
 has_constant <- function(effect, ...) UseMethod("has_constant")
-
-#' @export
 has_constant.effect <- function(effect, ...){
   return( grepl("const", effect[["term"]]) )
 }
 
 
-#' @export
 nonlinear <- function(effect, ...) UseMethod("nonlinear")
-
-#' @export
 nonlinear.effect <- function(effect, ...){
   return( grepl("^nonlinear", effect[["filetype"]]) )
 }
@@ -41,7 +33,7 @@ variables.effect <- function(effect, ...){
 
 #' predict an effect
 #' 
-#' @export
+#' @noRd
 predict.effect <- function(effect, X, ...){
   len <- length(X[[1]])
   # extract only variables which are member of effect
@@ -60,10 +52,25 @@ predict.effect <- function(effect, X, ...){
     stop( sprintf("%s: type of effect not supported", effect[["filetype"]]) )
   }
   
-  params <- t(read.table(effect[["pathsamples"]], header = TRUE)[,-1])
+  params <- t( read.table(effect[["pathsamples"]], header = TRUE)[,-1] )
   predicts <- design_matrix %*% params
-  return( structure(list(predicts), names = effect[["equationtype"]]) )
+  
+  return( structure(list(predicts), 
+                    names = paste(effect[["equationtype"]],
+                                  .dimension(effect[["pathsamples"]]),
+                                  sep = "_")
+                    ) 
+  )
 }
 
 
+.dimension <- function(pathsamples){
+  if( is.null(pathsamples) )
+    return( NULL )
+  var <- unlist( strsplit(pathsamples, split = "_") )
+  pos <- which( var == "MAIN" )
+  
+  # on +3 position dimension variable
+  return( var[pos + 3] )
+}
 

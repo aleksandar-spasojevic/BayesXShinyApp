@@ -1,12 +1,30 @@
 
+#' Wrapper around 'parameters'
+#' 
+#' @export
+Parameters <- function(path, X, ...){
+  # is file (= program) or folder (= output/result folder)
+  if (dir.exists(path)) {
+    output <- bayesXOutput(path)
+    return( parameters(output, X = X, ...) )
+    
+  } else if (file.exists(path)) {
+    result <- bayesX(path)
+    output <- bayesXOutput(result)
+    return( parameters(output, X = X, ...) )
+    
+  } else {
+    stop("path not found")
+  }
+}
+
+
 #' recieve distributional parameters (e.g \strong{\eqn{\eta}}'s)
 #' 
 #' returns sample of distributional parameters (e.g \strong{\eqn{\eta}})
-#' 
-#' @export
+#' @noRd
 parameters <- function(bayesXOutput, ...) UseMethod("parameters")
 
-#' @export
 parameters.bayesXOutput <- function(bayesXOutput, 
                                     # if 'X' not given, we take sequence of each 
                                     # variable in data, make grid and predict on 
@@ -15,8 +33,21 @@ parameters.bayesXOutput <- function(bayesXOutput,
                                     ...){
   effects_predicted <- predict(bayesXOutput, X = X)
   etas <- aggregate(effects_predicted)
+  
   params <- tryCatch({
-    lapply(etas, distribution(bayesXOutput)$link)
+    link <- distribution(bayesXOutput)$link
+    link_is_list <- is.list(link)
+    if( link_is_list ){
+      # link is named list: extract by parameters name the link function and
+      # apply it on parameters eta
+      params <- list()
+      for( param in names(etas) )
+        params[[param]] <- link[[ param ]]( etas[[param]] )
+      params
+    } else {
+      # link is one function: apply same link-function on each parameters eta
+      lapply(etas, link)
+    }
   }, error = function(e){
     # use identity function as link
     warning( sprintf("there is no link function defined for '%s', instead we use identity function", 
@@ -36,7 +67,8 @@ parameters.bayesXOutput <- function(bayesXOutput,
 
 aggregate.effects_predicted <- function(effects_predicted, ...){
   effects_aggr <- tapply(effects_predicted, 
-                         INDEX = names(effects_predicted), 
+                         # aggregate over 'equationtype' + 'dimension variable' (see '.dimension')
+                         INDEX = list( names(effects_predicted) ), 
                          FUN = function(...) {
                            eff_aggr <- Reduce("+",...)
                            class(eff_aggr) <- c("effects_aggregated", class(eff_aggr))
@@ -162,33 +194,50 @@ mode.parameters <- function(parameters, ...){
 
 
 #' @export
-distribution <- function(parameters, ...) UseMethod("distribution")
-distribution.parameters <- function(parameters, ...){
-  # NOTE: for each equation type there is an distribution attribute, unnecessary
-  # -> take first element; often all equation types of same distribution!
-  distr <- .distributions[[attr(parameters, "distribution")[[1]]]]
+cor <- function(parameters, ...) UseMethod("cor")
+
+#' @export
+cor.parameters <- function(parameters, ...){
+  distr <- distribution(parameters)
+  cor_fun <- cor(distr)
   
-  if( is.null(distr) )
-    stop( sprintf("distribution not found, add: %s", attr(parameters, "distribution")[[1]]) )
-  
-  class(distr) <- c("distribution", class(distr))
-  return(distr)
+  structure(do.call(cor_fun, parameters), 
+            X = attr(parameters, "X"), 
+            class = c("moment", "matrix"))
 }
 
 
-#' @export density.parameters
-density.parameters <- function(parameters, ...){
+distribution <- function(parameters, ...) UseMethod("distribution")
+distribution.parameters <- function(parameters, ...){
+  # NOTE: for each equation type there is an distribution attribute, unnecessary
+  # -> take first valid element; often all equation types of same distribution!
   
+  for( distr in attr(parameters, "distribution") ){
+    if (is.null(distr))
+      next
+    return( .distributions[[distr]] )
+  }
+  
+  if( is.null(distr) )
+    stop( sprintf("distribution not found, add: %s", distr) )
+}
+
+
+#' @export
+density <- function(parameters, ...) UseMethod("density")
+
+#' @export
+density.parameters <- function(parameters, ...){
+  if(all(is.na(parameters)))
+    stop("density not defined with these covariate values")
   distr <- distribution(parameters)
   dens.fun <- distr$density
   
-  # rename parameters so they match with fun (density) parameters in R
-  names(parameters) <- distr$parameter[names(parameters)]
   dens.fun.vec <- Vectorize(dens.fun, names(parameters))
   samples <- do.call(dens.fun.vec, append(parameters, list(...)))
   
   return( structure(samples, 
-                    class = c("density", class(samples)),
+                    class = c(distr$class, "density", class(samples)),
                     x = ...,
                     X = attr(parameters, "X")) )
 }
@@ -196,6 +245,5 @@ density.parameters <- function(parameters, ...){
 
 #' @export
 print.density <- function(dens, ...){
-  dens <- as.data.frame(dens)
-  print.default( head(cbind(df, attr(dens, "X")), 6) )
+  str(dens)
 }

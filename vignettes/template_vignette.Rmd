@@ -4,8 +4,6 @@ author: "Aleksandar Spasojevic"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::pdf_document:
-    includes:
-      in_header: header.tex
 vignette: >
   %\VignetteIndexEntry{Template}
   %\VignetteEngine{knitr::rmarkdown}
@@ -13,4 +11,5 @@ vignette: >
 ---
 
 ### Notes by Dr. N. Klein
-\includepdf[pages=-]{template.pdf}
+\includegraphics[page=1]{template.pdf}
+\includegraphics[page=2]{template.pdf}

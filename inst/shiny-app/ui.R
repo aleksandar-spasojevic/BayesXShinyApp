@@ -2,6 +2,7 @@ library(shiny)
 library(shinyBS)
 library(shinythemes)
 library(shinyFiles)
+library(BayesXShinyApp)
 
 shinyUI(fluidPage(
   theme = shinytheme("flatly"),
@@ -36,22 +37,31 @@ shinyUI(fluidPage(
     
     mainPanel(
       bsAlert("Dialog"),
+      bsModal("SpecifyCovariates","Covariates",trigger = NULL,
+              selectInput("CovaritesAsVarying", "Varying", NULL,
+                          multiple = TRUE),
+              uiOutput("CovariatesToFix"),
+              footer = bsButton("SaveModel", label = "Save"), size = "large"),
       tabsetPanel(
         tabPanel("Density",
                  bsButton("Matplot", "all Densities"),
                  plotOutput("Density"),
-                 fluidRow(
-                   column(3, numericInput("xmin", "xmin", NULL)),
-                   column(3, numericInput("xmax", "xmax", NULL)),
-                   column(3, numericInput("ymin", "ymin", NULL)),
-                   column(3, numericInput("ymax", "ymax", NULL))
-                 ),
+                 uiOutput("AxisRanges"),
+                 # column(3, numericInput("xmin", "xmin", NULL)),
+                 # column(3, numericInput("xmax", "xmax", NULL)),
+                 # column(3, numericInput("ymin", "ymin", NULL)),
+                 # column(3, numericInput("ymax", "ymax", NULL))
                  plotOutput("Densities")
         ),
-        tabPanel("Custom",
-                 textInput("RExpression", "R Expression", "", "100%"),
+        tabPanel("Moment",
+                 # textInput("Moment", "Moment", "", "100%"),
+                 selectInput("Moment", "Moment", c("mean","var","median","mod","cor")),
+                 fluidRow(
+                   column(3, selectizeInput("CovariateVarying", "Varying", NULL)),
+                   column(6, textInput("Range", "Range", value = "seq(0,1,length.out = 100)"))
+                 ),
                  actionButton("Plot", "Plot", icon("line-chart")),
-                 plotOutput("RExpression")
+                 plotOutput("MomentPlot")
         )
       )
     )

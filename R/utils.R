@@ -36,7 +36,7 @@ sequences.default <- function(obj, ...){
 }
 
 
-.range_to_sequence <- function(Ranges, length.out = 10) {
+.range_to_sequence <- function(Ranges, length.out = 5) {
   lapply(Ranges, function(var) {
     if( is.numeric(var) && !is.integer(var) ){
       seq(floor(var[1]), ceiling(var[2]), length.out = length.out)
