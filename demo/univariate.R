@@ -1,4 +1,4 @@
-
+library(BayesXShinyApp)
 output_path <- system.file("examples/univariate", package = "BayesXShinyApp")
 
 # load grid where parameters should be computed on

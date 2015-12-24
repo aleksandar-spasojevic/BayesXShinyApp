@@ -104,6 +104,8 @@ aggregate.effects_predicted <- function(effects_predicted, ...){
   return(sel_params)
 }
 
+#' @export
+quantile <- function(parameters, ...) UseMethod("quantile")
 
 #' @export
 quantile.parameters <- function(parameters, ...){
@@ -167,6 +169,9 @@ sd.parameter <- function(parameter, ...){
   apply(parameter, FUN = stats::sd, ...)
 }
 
+
+#' @export
+median <- function(parameters, ...) UseMethod("median")
 
 #' @export
 median.parameters <- function(parameters, ...){

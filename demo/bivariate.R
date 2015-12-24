@@ -1,3 +1,4 @@
+library(BayesXShinyApp)
 # with path
 output_path <- system.file("examples/bivariate", package = "BayesXShinyApp")
 
