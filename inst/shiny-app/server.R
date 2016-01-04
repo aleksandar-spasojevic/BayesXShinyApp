@@ -146,13 +146,20 @@ shinyServer(function(input, output, session) {
     vCovariates <- selected$model$varyingCovariates
     vGrid <- sapply(vCovariates, function(v) input[[v]])
     
-    if ( any(sapply(vGrid,is.null)) | any(sapply(vGrid,is.na)) )
+    if ( any(sapply(vGrid,is.null)) || any(sapply(vGrid,is.na)) )
       return( NULL )
     
     grid <- append(selected$model$fixedGrid, as.list(vGrid))
     withProgress(message = "calculating parameters", value = 0, {
       selected$param_sample <<- BayesXShinyApp:::parameters.bayesXOutput(selected$model$output,grid)
     })
+    
+    # save command to commands$Rcode
+    rcode <- list()
+    rcode$grid <- sprintf("grid = list(%s)", paste(names(grid), grid, collapse = ",", sep = "="))
+    rcode$param <- "param = BayesXShinyApp:::parameters.bayesXOutput(output, grid)"
+    isolate(commands$Rcode[[input$Model]] <- append(commands$Rcode[[input$Model]], 
+                                                    rcode))
   })
   
   observe({
@@ -180,18 +187,25 @@ shinyServer(function(input, output, session) {
       grid <- expand.grid(sequences)
     }
     
-    # # save command to commands$Rcode
-    # subsetting_code <- sprintf("param = %s[%s]", "params", cond)
-    # sequence_code <- sprintf("x = seq(%s, length.out = 200)",
-    #                          paste(names(sequence), sequence, sep = "=", collapse = ","))
-    # dens_code <- "dens = density(param, x = x)"
-    # rcode <- paste(subsetting_code, sequence_code, dens_code, sep = "\n") # combine all codes
-    # isolate(commands$Rcode[[input$Model]] <- append(commands$Rcode[[input$Model]], list(rcode)))
     tryCatch({
       withProgress(message = "calculating density", value = 0, {
         selected$density <<- BayesXShinyApp:::density.parameters(selected$param_sample, 
                                                                  x = grid)
       })
+      
+      # save command to commands$Rcode
+      y <- unique(variable)
+      seq_r_code <- sprintf("%s = c(%s)", y, paste(grid, collapse = ","))
+      if(length(y) == 1){
+        grid_r_code <- sprintf("grid = %s", y) 
+      } else {
+        grid_r_code <- sprintf("grid = expand.grid(%s)", paste(y, collapse = ",")) 
+      }
+      dens_r_code <- "dens = BayesXShinyApp:::density.parameters(param, x = grid)"
+      plot_r_code <- "plot(dens)"
+      r_code <- paste(seq_r_code, grid_r_code, dens_r_code, plot_r_code, sep = "\n")
+      isolate(commands$Rcode[[input$Model]] <- append(commands$Rcode[[input$Model]], 
+                                                      list(r_code)))
     },
     warning = function(w) {
       createAlert(session, "Dialog", title = "Warning", content = w$message)
@@ -222,6 +236,10 @@ shinyServer(function(input, output, session) {
     if( any(is.na(ylim)) )
       ylim <- NULL
     BayesXShinyApp:::matplot(dens, ylim = ylim, xlim = xlim)
+    
+    r_code <- "matplot(dens)"
+    isolate(commands$Rcode[[input$Model]] <- append(commands$Rcode[[input$Model]], 
+                                                    list(r_code)))
   })
   
   output$MomentPlot <- renderPlot({
@@ -230,7 +248,6 @@ shinyServer(function(input, output, session) {
     if( input$Plot == 0 )
       return( NULL )
     
-    # Use isolate() to avoid dependency on input$RExpression
     tryCatch({
       isolate({
         moment_fun <- input$Moment
@@ -247,17 +264,31 @@ shinyServer(function(input, output, session) {
         if(length(selected$model$fixedGrid) > 0)
           covariates <- append(covariates, selected$model$fixedGrid)
         
-        grid <- expand.grid(covariates)
+        # remove duplicates because 'varying covariate' in moment can be any
+        # covariate, so by appending above, the grid may contain duplicates in
+        # grid, one specified by varying moment, and one as fixed Covariate in 
+        # model. Remove those, so we have clean grid
+        grid <- expand.grid(covariates[!duplicated(names(covariates))])
         
         withProgress(message = "calculating parameters", value = 0, {
           params <- BayesXShinyApp:::parameters.bayesXOutput(selected$model$output,grid)
         })
         
-        rcode <- sprintf("lines(%s(params))", moment_fun)
-        eval(parse(text = rcode))
+        lines_r_code <- sprintf("lines(%s(params))", moment_fun)
+        eval(parse(text = lines_r_code))
+        
         # save command to commands$Rcode
-        # commands$Rcode[[input$Model]] <- append(commands$Rcode[[input$Model]],
-        #                                         list(rcode))
+        if( dim(grid)[2] == 1 ){
+          grid_r_code <- sprintf("grid = c(%s)", paste(grid, collapse = ","))
+        } else {
+          grid_r_code <- sprintf("grid = list(%s)", paste(names(grid), grid,
+                                                          sep = "=", collapse = ","))
+        }
+        
+        param_r_code <- "params = BayesXShinyApp:::parameters.bayesXOutput(output, grid)"
+        r_code <- paste(grid_r_code, param_r_code, lines_r_code, sep = "\n")
+        commands$Rcode[[input$Model]] <- append(commands$Rcode[[input$Model]],
+                                                list(r_code))
       })
     },
     warning = function(w) {

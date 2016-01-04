@@ -9,15 +9,7 @@ template <- "
 
 library(BayesXShinyApp)
 
-output <- bayesXOutput('{{prg_path}}')
-
-# defautl grid of covariates
-variables <- variables(output)
-X <- expand.grid(sapply(variables, function(var){
-                          seq(0, 1, length.out = 101)
-                        }, simplify = FALSE, USE.NAMES = TRUE))
-
-params <- parameters(output, X) # calc parameter samples on default grid
+output <- BayesXShinyApp:::bayesXOutput.character('{{prg_path}}')
 
 {{Rcode}}
 

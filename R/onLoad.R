@@ -1,8 +1,8 @@
 .onLoad <- function(libname, pkgname) {
   require(whisker)
-  
+
   # ---- univariate example ----
-  # 
+  #
   template <- "family=dagum,hlevel=1,equationtype=a,term=const x1 ,filetype=linear,pathsamples={{prg_path}}/yreg_MAIN_a_REGRESSION_y_LinearEffects_sample.raw,pathbasis=
   family=dagum,hlevel=1,equationtype=a,term=sx(x2),filetype=nonlinear,pathsamples={{prg_path}}/yreg_MAIN_a_REGRESSION_y_nonlinear_pspline_effect_of_x2_sample.raw,pathbasis={{prg_path}}/yreg_MAIN_a_REGRESSION_y_nonlinear_pspline_effect_of_x2_basisR.res,pathvarsample={{prg_path}}/yreg_MAIN_a_REGRESSION_y_variance_of_nonlinear_pspline_effect_of_x2_sample.raw
   predict={{prg_path}}/yreg_MAIN_a_REGRESSION_y_predict.res;
@@ -11,15 +11,15 @@
   family=dagum,hlevel=1,equationtype=b,term=sx(x2),filetype=nonlinear,pathsamples={{prg_path}}/yreg_MAIN_b_REGRESSION_y_nonlinear_pspline_effect_of_x2_sample.raw,pathbasis={{prg_path}}/yreg_MAIN_b_REGRESSION_y_nonlinear_pspline_effect_of_x2_basisR.res,pathvarsample={{prg_path}}/yreg_MAIN_b_REGRESSION_y_variance_of_nonlinear_pspline_effect_of_x2_sample.raw
   family=dagum,hlevel=1,equationtype=p,term=const ,filetype=linear,pathsamples={{prg_path}}/yreg_MAIN_p_REGRESSION_y_LinearEffects_sample.raw,pathbasis=
   "
-  
+
   prg_path <- system.file("examples/univariate", package = "BayesXShinyApp")
   rendered <- whisker.render(template, list(prg_path = prg_path))
-  
+
   writeLines(rendered, paste0(prg_path, "/yreg_R.r"))
-  
-  
+
+
   # ---- bivariate example ----
-  # 
+  #
   template <- "family=bivnormal,hlevel=1,equationtype=mu,term=const csex ctwin munemployed motorcycle mreligion2 mreligion3 mreligion4 mreligion5 electricity radio television refrigerator bicycle car ,filetype=linear,pathsamples={{prg_path}}/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_LinearEffects_sample.raw,pathbasis=
   family=bivnormal,hlevel=1,equationtype=mu,term=sx(cage),filetype=nonlinear,pathsamples={{prg_path}}/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_nonlinear_pspline_effect_of_cage_sample.raw,pathbasis={{prg_path}}/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_nonlinear_pspline_effect_of_cage_basisR.res,pathvarsample={{path}}/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_cage_sample.raw
   family=bivnormal,hlevel=1,equationtype=mu,term=sx(breastfeeding),filetype=nonlinear,pathsamples={{prg_path}}/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_nonlinear_pspline_effect_of_breastfeeding_sample.raw,pathbasis={{prg_path}}/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_nonlinear_pspline_effect_of_breastfeeding_basisR.res,pathvarsample={{path}}/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_mu_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_breastfeeding_sample.raw
@@ -54,9 +54,9 @@
   family=bivnormal,hlevel=1,equationtype=rho,term=sx(distH9),filetype=nonlinear,pathsamples={{prg_path}}/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_spatial_MRF_effect_of_distH9_sample.raw,pathbasis={{prg_path}}/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_spatial_MRF_effect_of_distH9_basisR.res,pathvarsample={{prg_path}}/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_variance_of_spatial_MRF_effect_of_distH9_sample.raw
   family=bivnormal,hlevel=1,equationtype=rho,term=sx(mage),filetype=nonlinear,pathsamples={{prg_path}}/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_nonlinear_pspline_effect_of_mage_sample.raw,pathbasis={{prg_path}}/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_nonlinear_pspline_effect_of_mage_basisR.res,pathvarsample={{prg_path}}/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_mage_sample.raw
   family=bivnormal,hlevel=1,equationtype=rho,term=sx(breastfeeding),filetype=nonlinear,pathsamples={{prg_path}}/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_nonlinear_pspline_effect_of_breastfeeding_sample.raw,pathbasis={{prg_path}}/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_nonlinear_pspline_effect_of_breastfeeding_basisR.res,pathvarsample={{prg_path}}/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_MAIN_rho_REGRESSION_stunting2_variance_of_nonlinear_pspline_effect_of_breastfeeding_sample.raw"
-  
+
   prg_path <- system.file("examples/bivariate", package = "BayesXShinyApp")
   rendered <- whisker.render(template, list(prg_path = prg_path))
-  
+
   writeLines(rendered, paste0(prg_path, "/NV_s1_di_ca_me_mb_br_ma_s2_di_ca_mb_br_rho_ca_di_ma_br_R.r"))
 }

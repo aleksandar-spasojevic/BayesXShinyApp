@@ -109,7 +109,7 @@ quantile <- function(parameters, ...) UseMethod("quantile")
 
 #' @export
 quantile.parameters <- function(parameters, ...){
-  lapply(parameters, quantile, ...)
+  lapply(parameters, stats::quantile, ...)
 }
 
 
@@ -127,7 +127,7 @@ mean.parameters <- function(parameters, ...){
   
   structure(do.call(mean_fun, parameters), 
             X = attr(parameters, "X"), 
-            class = c("moment", "matrix"))
+            class = c("moment", "list"))
 }
 
 
@@ -147,7 +147,7 @@ var.parameters <- function(parameters, ...){
   
   structure(do.call(var_fun, parameters), 
             X = attr(parameters, "X"), 
-            class = c("moment", "matrix"))
+            class = c("moment", "list"))
 }
 
 #' @export
@@ -180,7 +180,7 @@ median.parameters <- function(parameters, ...){
   
   structure(do.call(median_fun, parameters), 
             X = attr(parameters, "X"), 
-            class = c("moment", "matrix"))
+            class = c("moment", "list"))
 }
 
 
@@ -194,7 +194,7 @@ mode.parameters <- function(parameters, ...){
   
   structure(do.call(mode_fun, parameters), 
             X = attr(parameters, "X"), 
-            class = c("moment", "matrix"))
+            class = c("moment", "list"))
 }
 
 
@@ -208,7 +208,7 @@ cor.parameters <- function(parameters, ...){
   
   structure(do.call(cor_fun, parameters), 
             X = attr(parameters, "X"), 
-            class = c("moment", "matrix"))
+            class = c("moment", "list"))
 }
 
 

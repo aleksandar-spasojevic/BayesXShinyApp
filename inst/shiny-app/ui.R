@@ -47,15 +47,11 @@ shinyUI(fluidPage(
                  bsButton("Matplot", "all Densities"),
                  plotOutput("Density"),
                  uiOutput("AxisRanges"),
-                 # column(3, numericInput("xmin", "xmin", NULL)),
-                 # column(3, numericInput("xmax", "xmax", NULL)),
-                 # column(3, numericInput("ymin", "ymin", NULL)),
-                 # column(3, numericInput("ymax", "ymax", NULL))
                  plotOutput("Densities")
         ),
         tabPanel("Moment",
                  # textInput("Moment", "Moment", "", "100%"),
-                 selectInput("Moment", "Moment", c("mean","var","median","mod","cor")),
+                 selectInput("Moment", "Moment", c("mean","var","median","mode","cor")),
                  fluidRow(
                    column(3, selectizeInput("CovariateVarying", "Varying", NULL)),
                    column(6, textInput("Range", "Range", value = "seq(0,1,length.out = 100)"))
