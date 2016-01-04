@@ -197,7 +197,7 @@ plot.bivariate <- function(density, ...){
 plot.moment <- function(samples, ...){
   # NOTE: in samples there can be values where moment per definition is not defined
   # -> we exclude the resulting NA's and calculate mean only over valid moment values
-  mean <- apply(samples, 1, base::mean.default, na.rm = TRUE)
+  mean <- lapply(samples, rowMeans, na.rm = TRUE)
   
   X <- attr(samples, "X") # covariates values
   covariates <- names(X)
@@ -211,7 +211,7 @@ plot.moment <- function(samples, ...){
             return(
               print( 
                 ggplot(df, do.call(aes_string, as.list(structure(covariates, names = c("x","y"))))) + 
-                  geom_tile(aes(fill = mean)) +
+                  stat_contour(aes(z = mean, geom = "polygon", fill = ..level..)) +
                   ggtitle(deparse(substitute(samples)))
               ))
           }
@@ -224,7 +224,6 @@ plot.moment <- function(samples, ...){
 
 #' @export
 "[.moment" <- function(samples, ...){
-  browser()
   match <- with(attr(samples, "X"), ...)
   # subset by row
   # class(samples) <- "matrix"
