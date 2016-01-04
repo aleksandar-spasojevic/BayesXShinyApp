@@ -229,17 +229,20 @@ shinyServer(function(input, output, session) {
     if( is.null(dens) )
       return( NULL )
     
-    xlim <- c(input$xmin, input$xmax)
-    if( any(is.na(xlim)) )
-      xlim <- NULL
-    ylim <- c(input$ymin, input$ymax)
-    if( any(is.na(ylim)) )
-      ylim <- NULL
-    BayesXShinyApp:::matplot(dens, ylim = ylim, xlim = xlim)
-    
-    r_code <- "matplot(dens)"
-    isolate(commands$Rcode[[input$Model]] <- append(commands$Rcode[[input$Model]], 
-                                                    list(r_code)))
+    tryCatch({
+      BayesXShinyApp:::matplot(dens)
+      
+      # save commands if successfull
+      r_code <- "matplot(dens)"
+      isolate(commands$Rcode[[input$Model]] <- append(commands$Rcode[[input$Model]], 
+                                                      list(r_code)))
+    },
+    warning = function(w) {
+      createAlert(session, "Dialog", title = "Warning", content = w$message)
+    },
+    error = function(e) {
+      createAlert(session, "Dialog", title = "Error", content = e$message)
+    })
   })
   
   output$MomentPlot <- renderPlot({
