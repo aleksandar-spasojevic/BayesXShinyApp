@@ -201,7 +201,7 @@ plot.moment <- function(samples, ...){
   
   X <- attr(samples, "X") # covariates values
   covariates <- names(X)
-  df <- as.data.frame(append(X, list(mean = mean)))
+  df <- as.data.frame(append(X, structure(mean, names = "mean")))
   
   switch( length(covariates), # how many covariates in model?
           { # 1: univariate plotting
