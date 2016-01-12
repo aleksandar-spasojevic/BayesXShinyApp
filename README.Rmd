@@ -1,3 +1,12 @@
+---
+output:
+  html_document:
+    highlight: tango
+    keep_md: yes
+    theme: spacelab
+  pdf_document: default
+  word_document: default
+---
 # BayesXShinyApp
 
 Das BayesXShinyApp R-Paket ist eine Webapp (Shiny-App) für das BayesX. Der Benutzer 
@@ -11,8 +20,7 @@ verwendet werden.
 ## App
 Die App kann mittels
 
-
-```r
+```{r,eval=FALSE}
 library(BayesXShinyApp)
 run_app()
 ```
