@@ -9,12 +9,11 @@ output:
 ---
 # BayesXShinyApp
 
-Das BayesXShinyApp R-Paket ist eine Webapp (Shiny-App) für das BayesX. Der Benutzer 
-kann damit über eine Benutzeroberfläche Statistiken der Resultate von [BayesX](http://www.statistik.lmu.de/~bayesx/bayesx.html) anschauen.
+Das BayesXShinyApp R-Paket ist eine Webapp (Shiny-App) für das [BayesX](http://www.statistik.lmu.de/~bayesx/bayesx.html). Mit der Benutzeroberfläche können Statistiken von [BayesX](http://www.statistik.lmu.de/~bayesx/bayesx.html) geschätzgen Modellen analysiert werden.
 Die App ist in der Lage die Dichte, den Mittelwert, die Varianz und andere
-Momente zu visualisieren. Jede erfolgreiche Interaktion mit der App wird im 
-aufgezeichnet und der Benutzer kann darauf zurückgreifen, indem er sich am ein R-Skript
-von der App generieren lassen kann. Dieses Skript kann dann in der R-Konsole
+Momente zu visualisieren. Jede erfolgreiche Interaktion mit der App wird
+aufgezeichnet und der Benutzer kann darauf zurückgreifen, indem er sich ein R-Skript
+von der App generieren lässt. Dieses Skript kann dann in der R-Konsole
 verwendet werden.
 
 ## App
@@ -40,7 +39,10 @@ Verteilungsobjekt.
 Jedes Verteilungsobjekt besitzt mindestens folgende Felder
 
 * `density` enthält die Dichtefunktion `function(`**`params`**`) {...}`. 
-**`params`** enthält die 
+**`params`** entspricht den Parametern der Verteilung. Dem Namen des Parameters
+wird die Dimension in Form einer Zahl hinzugefügt, z.B. `mu_1` entspricht dem
+$\mu$ Parameter irgendeiner Verteilung. Handelt es sich um eine multivariate
+Verteilung und die besitzt Parameter in Form von Vektoren, so sieht die Namenskonvention wie folgt aus `mu_1, mu_2`. Dies entspricht dem 2 dimensionalen *$\mu$* Vektor
 * `class` ist ein `character` vector welcher der App sagt um welchen Typ von 
 Verteilung es sich hierbei handelt
 * `link` ist entweder eine Funktion `function(`**`params`**`) {...}` oder eine
@@ -48,10 +50,12 @@ Liste von Funktionen `list(param1 = function(`**`params`**`) {...}, param2 = fun
 wir dieselbe Funktion auf jedem Parameter der Verteilung angewandt. Letzere Variante
 erlaubt dem Entwickler für jeden Parameter seine Linkfunktion zu definieren.
 * `moment` ist eine Liste von Funktionen die Momente definieren. Jede Funktion
-ist in der Liste mit dem Momentnamen beschriftet und das R-Paket unterstützt
+ist in der Liste mit dem Momentnamen beschriftet und hat als Rückgabewert eine 
+Liste `return(list(...))`. Das R-Paket unterstützt
 folgende Namen `mean`,`median`,`mode`,`var`,`cor`. Möchte man die unterstützen Namen
 erweitern, so muss im `R/distribution.R` Dokument eine Funktion definiert werden
 mit folgender Struktur
+
 
 ```r
 # ersetze MOMENTNAME mit dem neuen Momentnamen
@@ -64,6 +68,5 @@ MOMENTNAME.distribution <- function(distr, ...){
     return(fun)
 }
 ```
-Jede Momentfunktion hat eine Liste als Rückgabewert `return(list(...))`.
 
 

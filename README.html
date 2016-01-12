@@ -91,7 +91,7 @@ img {
 
 <div id="bayesxshinyapp" class="section level1">
 <h1>BayesXShinyApp</h1>
-<p>Das BayesXShinyApp R-Paket ist eine Webapp (Shiny-App) für das BayesX. Der Benutzer kann damit über eine Benutzeroberfläche Statistiken der Resultate von <a href="http://www.statistik.lmu.de/~bayesx/bayesx.html">BayesX</a> anschauen. Die App ist in der Lage die Dichte, den Mittelwert, die Varianz und andere Momente zu visualisieren. Jede erfolgreiche Interaktion mit der App wird im aufgezeichnet und der Benutzer kann darauf zurückgreifen, indem er sich am ein R-Skript von der App generieren lassen kann. Dieses Skript kann dann in der R-Konsole verwendet werden.</p>
+<p>Das BayesXShinyApp R-Paket ist eine Webapp (Shiny-App) für das <a href="http://www.statistik.lmu.de/~bayesx/bayesx.html">BayesX</a>. Mit der Benutzeroberfläche können Statistiken von <a href="http://www.statistik.lmu.de/~bayesx/bayesx.html">BayesX</a> geschätzgen Modellen analysiert werden. Die App ist in der Lage die Dichte, den Mittelwert, die Varianz und andere Momente zu visualisieren. Jede erfolgreiche Interaktion mit der App wird aufgezeichnet und der Benutzer kann darauf zurückgreifen, indem er sich ein R-Skript von der App generieren lässt. Dieses Skript kann dann in der R-Konsole verwendet werden.</p>
 <div id="app" class="section level2">
 <h2>App</h2>
 <p>Die App kann mittels</p>
@@ -106,10 +106,10 @@ img {
 <h3>Interface</h3>
 <p>Jedes Verteilungsobjekt besitzt mindestens folgende Felder</p>
 <ul>
-<li><code>density</code> enthält die Dichtefunktion <code>function(</code><strong><code>params</code></strong><code>) {...}</code>. <strong><code>params</code></strong> enthält die</li>
+<li><code>density</code> enthält die Dichtefunktion <code>function(</code><strong><code>params</code></strong><code>) {...}</code>. <strong><code>params</code></strong> entspricht den Parametern der Verteilung. Dem Namen des Parameters wird die Dimension in Form einer Zahl hinzugefügt, z.B. <code>mu_1</code> entspricht dem <span class="math inline">\(\mu\)</span> Parameter irgendeiner Verteilung. Handelt es sich um eine multivariate Verteilung und die besitzt Parameter in Form von Vektoren, so sieht die Namenskonvention wie folgt aus <code>mu_1, mu_2</code>. Dies entspricht dem 2 dimensionalen <em><span class="math inline">\(\mu\)</span></em> Vektor</li>
 <li><code>class</code> ist ein <code>character</code> vector welcher der App sagt um welchen Typ von Verteilung es sich hierbei handelt</li>
 <li><code>link</code> ist entweder eine Funktion <code>function(</code><strong><code>params</code></strong><code>) {...}</code> oder eine Liste von Funktionen <code>list(param1 = function(</code><strong><code>params</code></strong><code>) {...}, param2 = function(</code><strong><code>params</code></strong><code>) {...})</code>. Im Ersteren wir dieselbe Funktion auf jedem Parameter der Verteilung angewandt. Letzere Variante erlaubt dem Entwickler für jeden Parameter seine Linkfunktion zu definieren.</li>
-<li><code>moment</code> ist eine Liste von Funktionen die Momente definieren. Jede Funktion ist in der Liste mit dem Momentnamen beschriftet und das R-Paket unterstützt folgende Namen <code>mean</code>,<code>median</code>,<code>mode</code>,<code>var</code>,<code>cor</code>. Möchte man die unterstützen Namen erweitern, so muss im <code>R/distribution.R</code> Dokument eine Funktion definiert werden mit folgender Struktur</li>
+<li><code>moment</code> ist eine Liste von Funktionen die Momente definieren. Jede Funktion ist in der Liste mit dem Momentnamen beschriftet und hat als Rückgabewert eine Liste <code>return(list(...))</code>. Das R-Paket unterstützt folgende Namen <code>mean</code>,<code>median</code>,<code>mode</code>,<code>var</code>,<code>cor</code>. Möchte man die unterstützen Namen erweitern, so muss im <code>R/distribution.R</code> Dokument eine Funktion definiert werden mit folgender Struktur</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ersetze MOMENTNAME mit dem neuen Momentnamen</span>
 MOMENTNAME.distribution &lt;-<span class="st"> </span>function(distr, ...){
@@ -120,7 +120,6 @@ MOMENTNAME.distribution &lt;-<span class="st"> </span>function(distr, ...){
   else
     <span class="kw">return</span>(fun)
 }</code></pre></div>
-<p>Jede Momentfunktion hat eine Liste als Rückgabewert <code>return(list(...))</code>.</p>
 </div>
 </div>
 </div>
