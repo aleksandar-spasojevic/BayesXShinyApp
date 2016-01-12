@@ -34,6 +34,11 @@ parameters.bayesXOutput <- function(bayesXOutput,
   effects_predicted <- predict(bayesXOutput, X = X)
   etas <- aggregate(effects_predicted)
   
+  old_names <- names(etas)
+  names(etas) <- .rename(names(etas)) # we rename etas's so one can use 
+  # distribution objects with generic parameter names in function declaration 
+  # (density, link, moment (e.g mu_1, ...))
+  
   params <- tryCatch({
     link <- distribution(bayesXOutput)$link
     link_is_list <- is.list(link)
@@ -60,6 +65,7 @@ parameters.bayesXOutput <- function(bayesXOutput,
   attr(params, "X") <- structure(as.list(X), out.attrs = NULL)
   attr(params, "distribution") <- structure(bayesXOutput["family"], 
                                             names = bayesXOutput["equationtype"])
+  attr(params, "old_names") <- old_names
   class(params) <- c("parameters", class(params))
   
   return( params )
@@ -252,3 +258,18 @@ density.parameters <- function(parameters, ...){
 print.density <- function(dens, ...){
   str(dens)
 }
+
+
+#' @note renames parameters so one can use distribution object's with function
+#' arguments of general scheme
+.rename <- function(names){
+  splitted <- strsplit(names, "_")
+  transposed <- structure(do.call(rbind, splitted), 
+                          dimnames = list(NULL, c("param","dim")))
+  transposed[,2] <- ave(transposed[,"dim"], transposed[,"param"], 
+                        FUN = function(dim) 1:length(dim))
+  
+  new_names <- mapply(transposed[,1],transposed[,2],FUN = paste, sep = "_")
+  return( new_names )
+}
+

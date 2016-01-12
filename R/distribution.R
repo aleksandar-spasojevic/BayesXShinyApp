@@ -6,8 +6,8 @@
   # ---------------------------------------------------------------------------- 
   dagum = structure(
     list(
-      density = function(a_y, p_y, b_y, ...) {
-        return( VGAM::ddagum(shape1.a = a_y, shape2.p = p_y, scale = b_y, ...) )
+      density = function(a_1, p_1, b_1, ...) {
+        return( VGAM::ddagum(shape1.a = a_1, shape2.p = p_1, scale = b_1, ...) )
       },
       class = "univariate",
       link = exp,
@@ -16,8 +16,8 @@
         # see wikipedia: https://en.wikipedia.org/wiki/Dagum_distribution
         
         # mean function
-        mean = function(a_y, b_y, p_y, ...) {
-          a <- a_y; b <- b_y; p <- p_y
+        mean = function(a_1, b_1, p_1, ...) {
+          a <- a_1; b <- b_1; p <- p_1
           
           mean <- (-b/a) * gamma(-1/a) * gamma(1/a + p) / gamma(p)
           # if a <= 1 then mean not defined!
@@ -26,22 +26,22 @@
         },
         
         # median function
-        median = function(a_y, b_y, p_y, ...) {
-          a <- a_y; b <- b_y; p <- p_y
+        median = function(a_1, b_1, p_1, ...) {
+          a <- a_1; b <- b_1; p <- p_1
           
           list("median" = b * (-1 + 2^{1/p})^(-1/a))
         },
         
         # mode function
-        mode = function(a_y, b_y, p_y, ...) {
-          a <- a_y; b <- b_y; p <- p_y
+        mode = function(a_1, b_1, p_1, ...) {
+          a <- a_1; b <- b_1; p <- p_1
           
           list("mode" = b * ((a*p - 1)/(a + 1))^(1/a))
         },
         
         # variance function
-        var = function(a_y, b_y, p_y, ...) {
-          a <- a_y; b <- b_y; p <- p_y
+        var = function(a_1, b_1, p_1, ...) {
+          a <- a_1; b <- b_1; p <- p_1
           var <- -((b/a)^2) * ( 2*a * gamma(-2/a)*gamma(2/a+p)/gamma(p) + (gamma(-1/a)*gamma(1/a + p)/gamma(p))^2 )
           # if a <= 2 then variance not defined!
           var[ a <= 2 ] <- NA
@@ -55,41 +55,41 @@
   # ----------------------------------------------------------------------------
   bivnormal = structure(
     list(
-      density = function(mu_stunting2, mu_wasting2, 
-                         sigma_stunting2, sigma_wasting2, 
-                         rho_stunting2, 
+      density = function(mu_1, mu_2, 
+                         sigma_1, sigma_2, 
+                         rho_1, 
                          ...) {
-        mean <- c(mu_stunting2, mu_wasting2)
-        cov <- diag(c(sigma_stunting2, sigma_wasting2))
-        cov[upper.tri(cov)] <- rho_stunting2 * sqrt(sigma_stunting2 * sigma_wasting2)
+        mean <- c(mu_1, mu_2)
+        cov <- diag(c(sigma_1, sigma_2))
+        cov[upper.tri(cov)] <- rho_1 * sqrt(sigma_1 * sigma_2)
         cov[lower.tri(cov)] <- cov[upper.tri(cov)]
         return( mvtnorm::dmvnorm(mean = mean, sigma = cov, ...) )
       },
       class = "bivariate",
       
       # if you define link as named list, all regression must be defined
-      link = list(mu_stunting2 = function(eta) eta,
-                  mu_wasting2 = function(eta) eta,
-                  sigma_stunting2 = function(eta) exp(eta),
-                  sigma_wasting2 = function(eta) exp(eta),
-                  rho_stunting2 = function(eta) eta/sqrt(1 + eta^2)),
+      link = list(mu_1 = function(eta) eta,
+                  mu_2 = function(eta) eta,
+                  sigma_1 = function(eta) exp(eta),
+                  sigma_2 = function(eta) exp(eta),
+                  rho_1 = function(eta) eta/sqrt(1 + eta^2)),
       
       moment = list(
         # mean function
-        mean = function(mu_stunting2, mu_wasting2, ...) {
-          return( list("stunting2" = mu_stunting2,
-                       "wasting2" = mu_wasting2) )
+        mean = function(mu_1, mu_2, ...) {
+          return( list("mu_1" = mu_1,
+                       "mu_2" = mu_2) )
         },
         
         # variance function
-        var = function(sigma_stunting2, sigma_wasting2, ...) {
-          return( list("stunting2" = sigma_stunting2,
-                       "wasting2" = sigma_wasting2) )
+        var = function(sigma_1, sigma_2, ...) {
+          return( list("sigma_1" = sigma_1,
+                       "sigma_2" = sigma_2) )
         },
         
         # correlation function
-        cor = function(rho_stunting2, ...){
-          return( list("rho" = rho_stunting2) )
+        cor = function(rho_1, ...){
+          return( list("rho_1" = rho_1) )
         }
       )
     ), class = c("distribution", "list"))
