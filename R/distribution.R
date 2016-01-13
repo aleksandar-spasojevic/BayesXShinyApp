@@ -14,31 +14,31 @@
       moment = list(
         # only functions here!
         # see wikipedia: https://en.wikipedia.org/wiki/Dagum_distribution
-        
+
         # mean function
         mean = function(a_1, b_1, p_1, ...) {
           a <- a_1; b <- b_1; p <- p_1
-          
+
           mean <- (-b/a) * gamma(-1/a) * gamma(1/a + p) / gamma(p)
           # if a <= 1 then mean not defined!
           mean[ a <= 1 ] <- NA
           return( list("mean" = mean) )
         },
-        
+
         # median function
         median = function(a_1, b_1, p_1, ...) {
           a <- a_1; b <- b_1; p <- p_1
-          
+
           list("median" = b * (-1 + 2^{1/p})^(-1/a))
         },
-        
+
         # mode function
         mode = function(a_1, b_1, p_1, ...) {
           a <- a_1; b <- b_1; p <- p_1
-          
+
           list("mode" = b * ((a*p - 1)/(a + 1))^(1/a))
         },
-        
+
         # variance function
         var = function(a_1, b_1, p_1, ...) {
           a <- a_1; b <- b_1; p <- p_1
