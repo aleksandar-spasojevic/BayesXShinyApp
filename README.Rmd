@@ -1,11 +1,11 @@
 ---
 output:
-  word_document: default
-  pdf_document: default
   html_document:
     highlight: tango
     keep_md: yes
     theme: spacelab
+  pdf_document: default
+  word_document: default
 ---
 # BayesXShinyApp
 

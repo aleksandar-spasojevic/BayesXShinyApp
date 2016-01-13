@@ -30,23 +30,24 @@ Verteilungsobjekt.
 ### Interface
 Jedes Verteilungsobjekt besitzt mindestens folgende Felder
 
-* `density` enthält die Dichtefunktion `function(`**`params`**`) {...}`. 
-**`params`** entspricht den Parametern der Verteilung. Dem Namen des Parameters
+* `density` enthält die Dichtefunktion `function(`**`param1`**`, ...) {...}`. 
+**`param1, ...`** entspricht den Parametern der Verteilung. Dem Namen des Parameters
 wird die Dimension in Form einer Zahl hinzugefügt, z.B. `mu_1` entspricht dem
 $\mu$ Parameter irgendeiner Verteilung. Handelt es sich um eine multivariate
 Verteilung und die besitzt Parameter in Form von Vektoren, so sieht die Namenskonvention wie folgt aus `mu_1, mu_2`. Dies entspricht dem 2 dimensionalen *$\mu$* Vektor
-* `class` ist ein `character` vector welcher der App sagt um welchen Typ von 
-Verteilung es sich hierbei handelt
-* `link` ist entweder eine Funktion `function(`**`params`**`) {...}` oder eine
-Liste von Funktionen `list(param1 = function(`**`params`**`) {...}, param2 = function(`**`params`**`) {...})`. Im Ersteren
+* `class` ist ein `character vector` und beschreibt den Typ der 
+Verteilung
+* `link` ist entweder eine Funktion `function(eta) {...}` oder eine
+Liste von Funktionen `list(`**`param1`**` = function(eta) {...}, `**`param2`**` = function(eta) {...})`. Im Ersteren
 wir dieselbe Funktion auf jedem Parameter der Verteilung angewandt. Letzere Variante
 erlaubt dem Entwickler für jeden Parameter seine Linkfunktion zu definieren.
-* `moment` ist eine Liste von Funktionen die Momente definieren. Jede Funktion
-ist in der Liste mit dem Momentnamen beschriftet und hat als Rückgabewert eine 
-Liste `return(list(...))`. Das R-Paket unterstützt
+* `moment` ist eine Liste von Funktionen die Momente definieren. Jede Funktion 
+in der Liste ist mit dem Momentnamen beschriftet und hat als Rückgabewert eine 
+Liste `return(list(`**`param1`**` = ...))`. Das R-Paket unterstützt
 folgende Namen `mean`,`median`,`mode`,`var`,`cor`. Möchte man die unterstützen Namen
 erweitern, so muss im `R/distribution.R` Dokument eine Funktion definiert werden
 mit folgender Struktur
+
 
 
 ```r
@@ -60,5 +61,36 @@ MOMENTNAME.distribution <- function(distr, ...){
     return(fun)
 }
 ```
+
+### Beispiel
+Wir möchten nun ein Verteilungsobjekt `cauchy` definieren,
+da wir mit BayesX ein Modell mit `cauchy` Parametern (equationtypes `t` und `s`) 
+geschätzt haben. Der 
+Verteilungsname `cauchy` muss BayesX Verteilungsnamen entsprechen. Die Linkfunktion
+ist `ìdentity` und besagt dass die aus dem BayesX geschätzten (sampled) Parameter
+genau so in die Dichtefunktion und Momentfunktionen verwendet werden sollen. Da
+die `cauchy` Verteilung keine Momente besitzt, werden wir den Teil leer lassen.
+Das Verteilungsobjekt würde nun so aussehen
+
+
+```r
+.distribution <- 
+  list(...,
+       cauchy = structure(
+         list(
+           # wobei 't' und 's' den equationtypes in BayesX entspricht
+           density = function(t_1, s_1, ...) {
+             return( dcauchy(location = t_1, scale = s_1, ...) )
+           },
+           class = "univariate",
+           # identity
+           link = function(eta) eta,
+           # https://de.wikipedia.org/wiki/Cauchy-Verteilung
+           moment = list()
+         ), class = c("distribution", "list"))
+  )
+```
+
+
 
 
