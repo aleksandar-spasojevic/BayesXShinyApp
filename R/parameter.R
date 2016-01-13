@@ -260,7 +260,7 @@ print.density <- function(dens, ...){
 }
 
 
-#' @note renames parameters so one can use distribution object's with function
+#' @note rename parameters so one can use distribution object's with function
 #' arguments of general scheme
 .rename <- function(names){
   splitted <- strsplit(names, "_")
